@@ -1,6 +1,9 @@
 class Player {
-    constructor(gameView) {
+    constructor(gameView, platforms) {
         this.gameView = gameView;
+        // temporary solution //////////
+        this.platforms = platforms;
+        ///////////////////////////////
         this.width = 35;
         this.height = 64;
         this.top = 400;
@@ -10,8 +13,11 @@ class Player {
 
         this.speed = 4;
         this.positionX = 0;
-        //this.positionY = 0;
-        //this.jumpHeight = ?;
+
+        this.jumpHeight = 64;
+        this.jumpSpeed = 7;
+        this.jumpStartPosition = 0;
+        this.positionY = 0;
 
         this.image.src = "images/player-char.png";
         this.image.classList.add("player-char-img");
@@ -28,11 +34,31 @@ class Player {
     }
 
     move() {
-        //console.log("function call");
+        console.log("move");
         this.left += this.positionX * this.speed;
-        //this.top += this.positionY * this.jumpHeight;
+        // jump
+        
+        // create seperate logic for jumping / falling
+
+        if (this.positionY < 0) {
+            this.top += this.positionY * this.jumpSpeed;
+            this.jumpStartPosition += this.jumpSpeed;
+            if (this.jumpStartPosition >= this.jumpHeight) {
+                this.positionY = 1
+            }
+        }
+
+         /// temporary solution. should have gravity pull down character more
+        if (this.positionY > 0) {
+            this.top += this.positionY * GRAVITY;
+        }
+
+        if (this.isStandingOnPlatform(this.platforms)) {
+            this.positionY = 0;
+        }
 
         
+        // keep player in bounds of game view
         if (this.left < 3) {
             this.left = 3;
         }
@@ -41,9 +67,43 @@ class Player {
             this.left = this.gameView.clientWidth - this.width;
         }
 
+        // update position of element
         this.element.style.top = `${this.top}px`;
         this.element.style.left = `${this.left}px`;
     }
+
+    jump() {
+        console.log("jump");
+        // should know initial position
+        // know if player is currently jumping or falling
+
+        // if positionY = 0 -> standing, -1 -> jumping, 1 -> falling
+
+        if (this.positionY === 0) {
+            this.positionY = -1;
+            this.jumpStartPosition = 0;
+        }
+    }
+
+    // check if char is currently standing on a platform
+    //////// issue -> need to specify which platform (?) ///////////////////
+    isStandingOnPlatform(platforms) {
+        const playerRect = this.element.getBoundingClientRect();
+
+        for (let platform of platforms) {
+            const platformRect = platform.element.getBoundingClientRect();
+            if (
+                playerRect.bottom <= platformRect.top + 2 &&
+                playerRect.bottom >= platformRect.top - 2 &&
+                playerRect.right >= platformRect.left &&
+                platformRect.left <= platformRect.right
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+        
 }
 
 /*

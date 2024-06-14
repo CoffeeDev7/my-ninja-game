@@ -25,6 +25,10 @@ window.addEventListener("load", () => {
             console.log("Key D pressed")
             game.player.positionX = 1;
         }
+        else if (event.code === "KeyW") {
+            console.log("Key W pressed");
+            game.player.jump();
+        }
     });
 
     document.addEventListener("keyup", (event) => {
