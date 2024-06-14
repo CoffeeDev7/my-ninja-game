@@ -18,19 +18,29 @@ class Game {
 
     start() {
         // set height and width for game view
-       this.gameView.style.width = `${this.width}px`;
-       this.gameView.style.height = `${this.height}px`;
-       
-       // hide other views
-       this.splashView.style.display = "none";
-       this.endView.style.display = "none";
+        this.gameView.style.width = `${this.width}px`;
+        this.gameView.style.height = `${this.height}px`;
+        
+        // hide other views
+        this.splashView.style.display = "none";
+        this.endView.style.display = "none";
 
-       this.gameView.style.display = "block";
+        this.gameView.style.display = "block";
 
-       // create player
+        // create player
+        this.player = new Player(this.gameView);
 
-       // create platforms
+        // create platforms
+        const platform1 = new Platform(this.gameView, 50, 50, 50);
+        const platform2 = new Platform(this.gameView, 150, 150, 150);
+        const platform3 = new Platform(this.gameView, 250, 250, 250);
+        const platform4 = new Platform(this.gameView, 350, 350, 350);
+        const platform5 = new Platform(this.gameView, 450, 450, 450);
 
        // set interval
+       const intervalId = setInterval(() => {
+        //console.log("interval")
+        this.player.move();
+       }, 1000 / 60);
     }
 }

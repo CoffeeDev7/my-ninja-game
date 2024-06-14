@@ -36,8 +36,6 @@ h1 {
 }
 
 .game-view {
-    width: 900px;
-    height: 500px;
     background-color: aquamarine;
     border-radius: 15px;
     box-shadow: -3px -3px 5px rgba(0, 0, 0, 0.2), 
@@ -63,16 +61,12 @@ h1 {
 }
 
 
-#ninja-char {
+.player-char {
     position: absolute;
-    width: 35px;
-    height: 64px;
     border: 2px solid red;
-    top: 400px; 
-    left: 100px;
 }
 
-#ninja-char-img {
+.player-char-img {
     position: absolute;
     top: -2px;
     left: -21px;
