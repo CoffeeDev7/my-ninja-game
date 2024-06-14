@@ -1,0 +1,81 @@
+/* CSS reset */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+}
+
+body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+
+input, button, textarea, select {
+    font: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+}
+
+#root, #__next {
+    isolation: isolate;
+}
+
+/* styles */
+
+h1 {
+    text-align: center;
+}
+
+.game-view {
+    width: 900px;
+    height: 500px;
+    background-color: aquamarine;
+    border-radius: 15px;
+    box-shadow: -3px -3px 5px rgba(0, 0, 0, 0.2), 
+                -6px -6px 10px rgba(0, 0, 0, 0.15),
+                -9px -9px 15px rgba(0, 0, 0, 0.1),
+                3px 3px 5px rgba(0, 0, 0, 0.2),
+                6px 6px 10px rgba(0, 0, 0, 0.15),
+                9px 9px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.window {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+}
+
+.platform {
+    position: absolute;
+    height: 20px;
+    background-color: brown;
+}
+
+
+#ninja-char {
+    position: absolute;
+    width: 35px;
+    height: 64px;
+    border: 2px solid red;
+    top: 400px; 
+    left: 100px;
+}
+
+#ninja-char-img {
+    position: absolute;
+    top: -2px;
+    left: -21px;
+    min-width: 64px;
+    min-height: 64px;
+}
