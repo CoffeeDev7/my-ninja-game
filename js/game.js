@@ -1,4 +1,4 @@
-const GRAVITY = 5;
+const GRAVITY = 0.5;
 
 class Game {
     constructor() {
@@ -30,21 +30,35 @@ class Game {
         this.gameView.style.display = "block";
 
         // create platforms
-        const platform1 = new Platform(this.gameView, 50, 50, 50);
-        const platform2 = new Platform(this.gameView, 150, 150, 150);
-        const platform3 = new Platform(this.gameView, 250, 250, 250);
+        // width, top, left
+        // starting coords -> 150, 470, 40
+        const platform1 = new Platform(this.gameView, 50, 250, 50);
+        const platform2 = new Platform(this.gameView, 150, 470, 40);
+        const platform3 = new Platform(this.gameView, 250, 350, 250);
         const platform4 = new Platform(this.gameView, 350, 400, 350);
-        const platform5 = new Platform(this.gameView, 450, 450, 450);
+        const platform5 = new Platform(this.gameView, 450, 450, 150);
 
         this.platforms.push(platform1, platform2, platform3, platform4, platform5);
 
-        // create player
+        // create player                        // temporary (include platforms)
         this.player = new Player(this.gameView, this.platforms);
 
        // set interval
+       let frames = 0;
+
        const intervalId = setInterval(() => {
         //console.log("interval")
         this.player.move();
+        frames += 1;
+
+        /*
+        //pause for debugging
+
+        if (frames > 600) {                
+            clearInterval(intervalId);
+        }
+        */
+
        }, 1000 / 60);
     }
 }

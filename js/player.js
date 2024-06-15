@@ -4,7 +4,7 @@ class Player {
         // temporary solution //////////
         this.platforms = platforms;
         ///////////////////////////////
-        this.width = 35;
+        this.width = 28;
         this.height = 64;
         this.top = 400;
         this.left = 100;
@@ -14,11 +14,17 @@ class Player {
         this.speed = 4;
         this.positionX = 0;
 
-        this.jumpHeight = 64;
-        this.jumpSpeed = 7;
-        this.jumpStartPosition = 0;
-        this.positionY = 0;
+        //this.jumpHeight = 64;
+        //this.jumpStartPosition = 0;
+        //this.positionY = 0;
 
+        // jump -> use velocity and gravity to determine speed of fall
+        this.jumpSpeed = 10;      
+        this.jumping = false;
+        this.velocity = 0;
+        
+        // set the player rectangle slightly less wide than actual image, 
+        // to account for parts of image sticking out
         this.image.src = "images/player-char.png";
         this.image.classList.add("player-char-img");
 
@@ -35,27 +41,34 @@ class Player {
 
     move() {
         console.log("move");
+        // move horizontal
         this.left += this.positionX * this.speed;
+        
         // jump
         
-        // create seperate logic for jumping / falling
-
-        if (this.positionY < 0) {
-            this.top += this.positionY * this.jumpSpeed;
-            this.jumpStartPosition += this.jumpSpeed;
-            if (this.jumpStartPosition >= this.jumpHeight) {
-                this.positionY = 1
+        // currently jumping
+        // while velocity is negative, -> character moves up
+        if (this.jumping) {
+            // add gravity to velocity, add velocity to top (y position)
+            this.top += this.velocity;
+            this.velocity += GRAVITY;
+            // when velocity reaches 0, start falling
+            if (this.velocity >= 0) {
+                this.jumping = false;
             }
         }
-
-         /// temporary solution. should have gravity pull down character more
-        if (this.positionY > 0) {
-            this.top += this.positionY * GRAVITY;
+        else {
+            // if not standing on platform, add gravity to velocity, add to top
+            if (!this.isStandingOnPlatform(this.platforms)) {
+                this.velocity += GRAVITY;
+                this.top += this.velocity;
+            }
+            else {
+                // if standing, set velocity to 0
+                this.velocity = 0;
+            }
         }
-
-        if (this.isStandingOnPlatform(this.platforms)) {
-            this.positionY = 0;
-        }
+        
 
         
         // keep player in bounds of game view
@@ -74,30 +87,36 @@ class Player {
 
     jump() {
         console.log("jump");
-        // should know initial position
-        // know if player is currently jumping or falling
 
-        // if positionY = 0 -> standing, -1 -> jumping, 1 -> falling
-
-        if (this.positionY === 0) {
-            this.positionY = -1;
-            this.jumpStartPosition = 0;
+        // can only jump if not currently jumping and standing on platform
+        if (!this.jumping && this.isStandingOnPlatform(this.platforms)) {
+            this.jumping = true;
+            this.velocity = -this.jumpSpeed;
         }
     }
-
+    ///////////(!) char falls through platform if falling from great heights/////////
+    
     // check if char is currently standing on a platform
-    //////// issue -> need to specify which platform (?) ///////////////////
     isStandingOnPlatform(platforms) {
+        // compare bounds of player to each platform on screen
         const playerRect = this.element.getBoundingClientRect();
+
+        console.log("Player: ", playerRect);
 
         for (let platform of platforms) {
             const platformRect = platform.element.getBoundingClientRect();
+
+            console.log("Platform :", platformRect);
+
+            // detect collision with top of platform, allow some margin
             if (
-                playerRect.bottom <= platformRect.top + 2 &&
-                playerRect.bottom >= platformRect.top - 2 &&
+                playerRect.bottom <= platformRect.top + 3 &&
+                playerRect.bottom >= platformRect.top - 3 &&
                 playerRect.right >= platformRect.left &&
-                platformRect.left <= platformRect.right
+                playerRect.left <= platformRect.right
             ) {
+                console.log("Collision platform: ", platformRect);
+                console.log("Collision player: ", playerRect);
                 return true;
             }
         }
