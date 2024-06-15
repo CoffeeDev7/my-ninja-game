@@ -6,7 +6,7 @@ class Player {
         ///////////////////////////////
         this.width = 28;
         this.height = 64;
-        this.top = 400;
+        this.top = 380;
         this.left = 100;
         this.element = document.createElement("div");
         this.image = document.createElement("img");
@@ -19,7 +19,7 @@ class Player {
         //this.positionY = 0;
 
         // jump -> use velocity and gravity to determine speed of fall
-        this.jumpSpeed = 10;      
+        this.jumpSpeed = 9;      
         this.jumping = false;
         this.velocity = 0;
         
@@ -30,7 +30,7 @@ class Player {
 
         this.element.style.width = `${this.width}px`;
         this.element.style.height = `${this.height}px`;
-        this.element.style.top = `${this.top}px`;
+        //this.element.style.bottom = `${this.bottom}px`;
         this.element.style.left = `${this.left}px`;
         this.element.classList.add("player-char");
 
@@ -59,13 +59,19 @@ class Player {
         }
         else {
             // if not standing on platform, add gravity to velocity, add to top
-            if (!this.isStandingOnPlatform(this.platforms)) {
+            const platform = this.isStandingOnPlatform(this.platforms);
+            if (!platform) {
                 this.velocity += GRAVITY;
+                if (this.velocity > TERMINAL_VELOCITY) {
+                    this.velocity = TERMINAL_VELOCITY;
+                }
                 this.top += this.velocity;
             }
             else {
                 // if standing, set velocity to 0
                 this.velocity = 0;
+                // set player character correctly on top of platform
+                this.top = parseFloat(platform.element.style.top) - this.height - 1;
             }
         }
         
@@ -94,33 +100,30 @@ class Player {
             this.velocity = -this.jumpSpeed;
         }
     }
-    ///////////(!) char falls through platform if falling from great heights/////////
-    
+
     // check if char is currently standing on a platform
     isStandingOnPlatform(platforms) {
         // compare bounds of player to each platform on screen
         const playerRect = this.element.getBoundingClientRect();
 
-        console.log("Player: ", playerRect);
+        //console.log("Player: ", playerRect);
 
         for (let platform of platforms) {
             const platformRect = platform.element.getBoundingClientRect();
 
-            console.log("Platform :", platformRect);
+            //console.log("Platform :", platformRect);
 
             // detect collision with top of platform, allow some margin
             if (
-                playerRect.bottom <= platformRect.top + 3 &&
-                playerRect.bottom >= platformRect.top - 3 &&
+                playerRect.bottom <= platformRect.top + 5 &&
+                playerRect.bottom >= platformRect.top - 5 &&
                 playerRect.right >= platformRect.left &&
                 playerRect.left <= platformRect.right
             ) {
-                console.log("Collision platform: ", platformRect);
-                console.log("Collision player: ", playerRect);
-                return true;
+                return platform;
             }
         }
-        return false;
+        return null;
     }
         
 }

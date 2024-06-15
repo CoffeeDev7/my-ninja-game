@@ -18,15 +18,15 @@ window.addEventListener("load", () => {
     document.addEventListener("keydown", (event) => {
         console.log(event);
         if (event.code === "KeyA") {
-            console.log("Key A pressed")
+            //console.log("Key A pressed")
             game.player.positionX = -1
         }
         else if (event.code === "KeyD") {
-            console.log("Key D pressed")
+            //console.log("Key D pressed")
             game.player.positionX = 1;
         }
         else if (event.code === "KeyW") {
-            console.log("Key W pressed");
+            //console.log("Key W pressed");
             game.player.jump();
         }
     });
@@ -40,7 +40,7 @@ window.addEventListener("load", () => {
     document.addEventListener("keydown", (event) => {
         const gameWidth = game.width;
         const playerLeft = game.player.left;
-        console.log("game width: ", gameWidth);
-        console.log("player left: ", playerLeft);
+        //console.log("game width: ", gameWidth);
+        //console.log("player left: ", playerLeft);
     });
 });
