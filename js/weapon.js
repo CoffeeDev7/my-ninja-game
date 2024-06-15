@@ -30,8 +30,8 @@ class Weapon {
 }
 
 class PlayerWeapon extends Weapon {
-    constructor(imageSrc, owner) {
-        super(imageSrc, owner);
+    constructor(imageSrc, owner, gameView) {
+        super(imageSrc, owner, gameView);
         this.element.style.display = "none";
     }
 
@@ -54,9 +54,17 @@ class PlayerWeapon extends Weapon {
             // check if weapon is off screen
             if (weaponRect.left < gameViewRect.left || weaponRect.right > gameViewRect.right) {
                 // return weapon
+                this.returnWeapon();
             }
         }
         // update weapon position
         this.element.style.left = `${this.left}px`;
+    }
+
+    // return weapon back to player
+    returnWeapon() {
+        this.element.style.display = "none";
+        this.left = 0;
+        this.thrown = false;
     }
 }

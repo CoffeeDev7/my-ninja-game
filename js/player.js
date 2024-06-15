@@ -37,6 +37,8 @@ class Player {
         this.element.appendChild(this.image);
         this.gameView.appendChild(this.element);
 
+        this.weapon = new PlayerWeapon("images/player-wpn.png", this, this.gameView);
+
     }
 
     move() {
