@@ -73,3 +73,13 @@ h1 {
     min-width: 64px;
     min-height: 64px;
 }
+
+.weapon-element {
+    position: absolute;
+    border: 2px solid red
+}
+
+.weapon-img {
+    min-width: 32px;
+    min-height: 32px;
+}
