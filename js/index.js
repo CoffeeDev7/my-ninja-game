@@ -30,13 +30,11 @@ window.addEventListener("load", () => {
             game.player.jump();
         }
         else if (event.code === "KeyP") {
-            game.player.weapon.positionX = 1;
-            game.player.weapon.throw();
+            game.player.weapon.throw("right");
 
         }
         else if (event.code === "KeyO") {
-            game.player.weapon.positionX = -1;
-            game.player.weapon.throw();
+            game.player.weapon.throw("left");
         }
     });
 

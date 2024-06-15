@@ -58,6 +58,7 @@ class Game {
        const intervalId = setInterval(() => {
         //console.log("interval")
         this.player.move();
+        this.player.weapon.renderWeapon();
         frames += 1;
 
         
