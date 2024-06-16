@@ -67,18 +67,9 @@ class Game {
        const intervalId = setInterval(() => {
         //console.log("interval")
         this.player.move();
+        this.player.renderPlayer();
         this.player.weapon.renderWeapon();
         frames += 1;
-
-        if (this.player.top > this.gameView.clientHeight + 20) {
-            // respawn (add method to player class (?))
-            this.player.top = 380;
-            this.player.left = 100;
-            if (this.lives > 0) {
-                this.livesElements[this.lives - 1].remove();
-                this.lives -= 1;
-            }
-        }
 
         
         //pause for debugging

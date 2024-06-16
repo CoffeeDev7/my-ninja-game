@@ -6,8 +6,14 @@ class Player {
         ///////////////////////////////
         this.width = 28;
         this.height = 64;
-        this.top = 380;
-        this.left = 100;
+        this.startTop = 380;
+        this.startLeft = 100;
+
+        this.died = false;
+
+        this.top = this.startTop;
+        this.left = this.startLeft;
+
         this.element = document.createElement("div");
         this.image = document.createElement("img");
 
@@ -44,56 +50,57 @@ class Player {
     move() {
         console.log("move");
         // move horizontal
-        this.left += this.positionX * this.speed;
+        if (!this.died) {
+
         
-        // jump
-        
-        // currently jumping
-        // while velocity is negative, -> character moves up
-        if (this.jumping) {
-            // add gravity to velocity, add velocity to top (y position)
-            this.top += this.velocity;
-            this.velocity += GRAVITY;
-            // when velocity reaches 0, start falling
-            if (this.velocity >= 0) {
-                this.jumping = false;
-            }
-        }
-        else {
-            // if not standing on platform, add gravity to velocity, add to top
-            const platform = this.isStandingOnPlatform(this.platforms);
-            if (!platform) {
-                this.velocity += GRAVITY;
-                if (this.velocity > TERMINAL_VELOCITY) {
-                    this.velocity = TERMINAL_VELOCITY;
-                }
+            this.left += this.positionX * this.speed;
+            
+            // jump
+            
+            // currently jumping
+            // while velocity is negative, -> character moves up
+            if (this.jumping) {
+                // add gravity to velocity, add velocity to top (y position)
                 this.top += this.velocity;
+                this.velocity += GRAVITY;
+                // when velocity reaches 0, start falling
+                if (this.velocity >= 0) {
+                    this.jumping = false;
+                }
             }
             else {
-                // if standing, set velocity to 0
-                this.velocity = 0;
-                // set player character correctly on top of platform
-                this.top = parseFloat(platform.element.style.top) - this.height - 1;
+                // if not standing on platform, add gravity to velocity, add to top
+                const platform = this.isStandingOnPlatform(this.platforms);
+                if (!platform) {
+                    this.velocity += GRAVITY;
+                    if (this.velocity > TERMINAL_VELOCITY) {
+                        this.velocity = TERMINAL_VELOCITY;
+                    }
+                    this.top += this.velocity;
+                }
+                else {
+                    // if standing, set velocity to 0
+                    this.velocity = 0;
+                    // set player character correctly on top of platform
+                    this.top = parseFloat(platform.element.style.top) - this.height - 1;
+                }
             }
-        }
-        
+            
+            // keep player in bounds of game view
+            if (this.left < 3) {
+                this.left = 3;
+            }
 
-        
-        // keep player in bounds of game view
-        if (this.left < 3) {
-            this.left = 3;
-        }
+            if (this.left > this.gameView.clientWidth - this.width) {
+                this.left = this.gameView.clientWidth - this.width;
+            }
 
-        if (this.left > this.gameView.clientWidth - this.width) {
-            this.left = this.gameView.clientWidth - this.width;
-        }
-
-        // check if player fell out of bounds (in game class)
-        
-
-        // update position of element
-        this.element.style.top = `${this.top}px`;
-        this.element.style.left = `${this.left}px`;
+            // check if player fell out of bounds (in game class)
+            if (this.top > this.gameView.clientHeight + 20) {
+                this.died = true;
+                this.respawn();
+            } 
+        }  
     }
 
     jump() {
@@ -129,6 +136,35 @@ class Player {
             }
         }
         return null;
+    }
+
+    respawn() {
+        this.element.style.display = "none";
+        this.top = this.startTop;
+        this.left = this.startLeft;
+        let flashCount = 0;
+        const flashInterval = setInterval(() => {
+            if (this.element.style.display === "none") {
+                this.element.style.display = "block";
+            }
+            else {
+                this.element.style.display = "none";
+            }
+
+            flashCount += 1;
+
+            if (flashCount >= 6) {
+                this.element.style.display = "block";
+                this.died = false;
+                clearInterval(flashInterval);
+            }
+        }, 300);
+    }
+
+    renderPlayer() {
+        // update position of element
+        this.element.style.top = `${this.top}px`;
+        this.element.style.left = `${this.left}px`;
     }
         
 }
