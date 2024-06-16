@@ -88,6 +88,9 @@ class Player {
             this.left = this.gameView.clientWidth - this.width;
         }
 
+        // check if player fell out of bounds (in game class)
+        
+
         // update position of element
         this.element.style.top = `${this.top}px`;
         this.element.style.left = `${this.left}px`;

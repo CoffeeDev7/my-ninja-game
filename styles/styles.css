@@ -48,6 +48,23 @@ h1 {
     overflow: hidden;
 }
 
+.lives-container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    top: 2px;
+    left: 2px;
+}
+
+.life {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: darkblue;
+}
+
 .window {
     display: flex;
     justify-content: center;

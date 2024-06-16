@@ -1,5 +1,5 @@
 const GRAVITY = 0.6;
-const TERMINAL_VELOCITY = 12;
+const TERMINAL_VELOCITY = 15;
 
 class Game {
     constructor() {
@@ -17,6 +17,15 @@ class Game {
         this.enemies = [];
 
         this.enemyBoss;
+
+        // display lives
+        for (let i = 0; i < this.lives; i++) {
+            const life = document.createElement("div");
+            life.classList.add("life");
+            document.getElementById("lives").appendChild(life);
+        }
+
+        this.livesElements = document.querySelectorAll(".life");
     }
 
     start() {
@@ -42,7 +51,7 @@ class Game {
         const platform7 = new Platform(this.gameView, 300, 200, 400);
         const platform8 = new Platform(this.gameView, 75, 200, 210); 
         const platform9 = new Platform(this.gameView, 100, 150, 100);
-        const platform10 = new Platform(this.gameView, 350, 100, 250)
+        const platform10 = new Platform(this.gameView, 350, 100, 250);
         const platformEnd = new Platform(this.gameView, 170, 100, 720);
 
         this.platforms.push(platform1, platform2, platform3, platform4, platform5,
@@ -60,6 +69,16 @@ class Game {
         this.player.move();
         this.player.weapon.renderWeapon();
         frames += 1;
+
+        if (this.player.top > this.gameView.clientHeight + 20) {
+            // respawn (add method to player class (?))
+            this.player.top = 380;
+            this.player.left = 100;
+            if (this.lives > 0) {
+                this.livesElements[this.lives - 1].remove();
+                this.lives -= 1;
+            }
+        }
 
         
         //pause for debugging

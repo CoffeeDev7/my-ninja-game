@@ -12,8 +12,6 @@ class Weapon {
         this.height = 32;
         this.top = this.owner.top + 25;
         this.left = this.owner.left;
-
-        //this.currentTop = 0;
         
         this.element = document.createElement("div");
         this.image = document.createElement("img");
