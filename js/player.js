@@ -21,14 +21,13 @@ class Player {
         this.speed = 4;
         this.positionX = 0;
 
-        //this.jumpHeight = 64;
-        //this.jumpStartPosition = 0;
-        //this.positionY = 0;
 
         // jump -> use velocity and gravity to determine speed of fall
         this.jumpSpeed = 9;      
         this.jumping = false;
         this.velocity = 0;
+        this.falling = false;
+        this.positionY = 0;
         
         // set the player rectangle slightly less wide than actual image, 
         // to account for parts of image sticking out
@@ -52,10 +51,6 @@ class Player {
         console.log("move");
         // move horizontal
         if (!this.died) {
-
-        
-            this.left += this.positionX * this.speed;
-            
             // jump
             
             // currently jumping
@@ -75,18 +70,30 @@ class Player {
                 if (!platform) {
                     this.velocity += GRAVITY;
                     if (this.velocity > TERMINAL_VELOCITY) {
-                        this.velocity = TERMINAL_VELOCITY;
+                        this.velocity = TERMINAL_VELOCITY; 
                     }
                     this.top += this.velocity;
+                    // change logic for falling
+                    // take away control of player when falling too long
+                    if (this.velocity > this.jumpSpeed) {
+                        this.falling = true;
+                    }
+                    
                 }
                 else {
                     // if standing, set velocity to 0
+                    this.falling = false;
                     this.velocity = 0;
                     // set player character correctly on top of platform
                     this.top = parseFloat(platform.element.style.top) - this.height - 1;
                 }
             }
             
+            // possible solution -> prevent movement when falling
+            if (!this.falling) {
+                this.left += this.positionX * this.speed;
+            }
+
             // keep player in bounds of game view
             if (this.left < 3) {
                 this.left = 3;
@@ -110,7 +117,9 @@ class Player {
         // can only jump if not currently jumping and standing on platform
         if (!this.jumping && this.isStandingOnPlatform(this.platforms)) {
             this.jumping = true;
+            this.falling = false;
             this.velocity = -this.jumpSpeed;
+            this.positionY = this.top;
         }
     }
 
@@ -168,6 +177,7 @@ class Player {
 
     renderPlayer() {
         // update position of element
+        this.move();
         this.element.style.top = `${this.top}px`;
         this.element.style.left = `${this.left}px`;
     }

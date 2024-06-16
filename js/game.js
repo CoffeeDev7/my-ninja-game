@@ -83,21 +83,32 @@ class Game {
 
        const intervalId = setInterval(() => {
         //console.log("interval")
-        this.player.move();
-        this.player.renderPlayer();
-        this.player.weapon.renderWeapon();
-        this.enemies.forEach(enemy => {
-            enemy.move();
-        })
-        frames += 1;
 
-        
-        //pause for debugging
+        // pause for debugging
         /*
+        frames += 1;
         if (frames > 600) {                
             clearInterval(intervalId);
         }
         */
+
+        const deadEnemies = [];
+
+
+        this.player.renderPlayer();
+        this.player.weapon.renderWeapon();
+        this.enemies.forEach(enemy => {
+            enemy.move();
+
+            if (enemy.didCollide(this.player.element)) {
+                this.player.died = true;
+                this.player.respawn();
+            }
+            else if (enemy.gotHit(this.player.weapon)) {
+                deadEnemies.push(enemy);
+                enemy.element.remove();
+            }
+        });
 
        }, 1000 / 60);
     }

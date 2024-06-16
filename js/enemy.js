@@ -20,7 +20,6 @@ class BasicEnemy extends Enemy {
         this.width = 64;
         this.height = 64;
         this.platform = platform;
-        this.facingRight = true;
 
         this.positionX = 0;
         this.speed = 2;
@@ -60,10 +59,35 @@ class BasicEnemy extends Enemy {
     // rendering
     // collision detection
     didCollide(player) {
+        const playerRect = player.getBoundingClientRect();
+        const enemyRect = this.element.getBoundingClientRect();
+
+        if (
+            playerRect.left < enemyRect.right &&
+            playerRect.right > enemyRect.left &&
+            playerRect.top < enemyRect.bottom &&
+            playerRect.bottom > enemyRect.top
+        ) {
+            return true;
+        }
         
+        return false;
     }
 
     gotHit(playerWeapon) {
+        const weaponRect = playerWeapon.element.getBoundingClientRect();
+        const enemyRect = this.element.getBoundingClientRect();
 
+        if (
+            weaponRect.left < enemyRect.right &&
+            weaponRect.right > enemyRect.left &&
+            weaponRect.top < enemyRect.bottom &&
+            weaponRect.bottom > enemyRect.top
+        ) {
+            playerWeapon.returnWeapon();
+            return true;
+        }
+        
+        return false;
     }
 }
