@@ -7,9 +7,10 @@ class Player {
         this.width = 28;
         this.height = 64;
         this.startTop = 380;
-        this.startLeft = 100;
+        this.startLeft = 50;
 
         this.died = false;
+        this.lives = 5;
 
         this.top = this.startTop;
         this.left = this.startLeft;
@@ -139,6 +140,10 @@ class Player {
     }
 
     respawn() {
+        const livesElements = document.querySelectorAll(".life");
+        livesElements[this.lives - 1].remove();
+
+        this.lives -= 1;
         this.element.style.display = "none";
         this.top = this.startTop;
         this.left = this.startLeft;

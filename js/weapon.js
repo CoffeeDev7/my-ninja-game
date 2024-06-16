@@ -37,22 +37,26 @@ class PlayerWeapon extends Weapon {
     }
 
     throw(direction) {
-        if (!this.thrown) {
-            // if not yet thrown, make visible, set in motion.
-            console.log("throw");
-            this.thrown = true;
-            
+        if (!this.owner.died) {
 
-            this.positionY = this.owner.top + 25;
-            this.left = this.owner.left;
+        
+            if (!this.thrown) {
+                // if not yet thrown, make visible, set in motion.
+                console.log("throw");
+                this.thrown = true;
+                
 
-            this.element.style.display = "block";
+                this.positionY = this.owner.top + 25;
+                this.left = this.owner.left;
 
-            if (direction === "left") {
-                this.positionX = -1
-            }
-            else if (direction === "right") { 
-                this.positionX = 1;
+                this.element.style.display = "block";
+
+                if (direction === "left") {
+                    this.positionX = -1
+                }
+                else if (direction === "right") { 
+                    this.positionX = 1;
+                }
             }
         }
     }

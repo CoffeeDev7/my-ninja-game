@@ -9,7 +9,6 @@ class Game {
         this.width = 900;
         this.height = 500;
 
-        this.lives = 5;
         this.gameOver = false;
         this.player;
 
@@ -18,14 +17,14 @@ class Game {
 
         this.enemyBoss;
 
-        // display lives
-        for (let i = 0; i < this.lives; i++) {
+        // display lives -> could maybe use different method
+        for (let i = 0; i < 5; i++) {
             const life = document.createElement("div");
             life.classList.add("life");
             document.getElementById("lives").appendChild(life);
         }
 
-        this.livesElements = document.querySelectorAll(".life");
+        //this.livesElements = document.querySelectorAll(".life");
     }
 
     start() {
@@ -54,9 +53,27 @@ class Game {
         const platform10 = new Platform(this.gameView, 350, 100, 250);
         const platformEnd = new Platform(this.gameView, 170, 100, 720);
 
+        // add to array for collision detection
         this.platforms.push(platform1, platform2, platform3, platform4, platform5,
             platform6, platform7, platform8, platform9, platform10, platformEnd
         );
+
+        // create enemies
+        const basicEnemy1 = new BasicEnemy(this.gameView, 
+            "images/basic-enemy-ninja-1.png", platform7
+        );
+        const basicEnemy2 = new BasicEnemy(this.gameView,
+            "images/basic-enemy-ninja-3.png", platform3
+        );
+        const basicEnemy3 = new BasicEnemy(this.gameView,
+            "images/basic-enemy-ninja-2.png", platform5
+        );
+
+        basicEnemy1.positionX = 1;
+        basicEnemy2.positionX = -1;
+        basicEnemy3.positionX = 1;
+
+        this.enemies.push(basicEnemy1, basicEnemy2, basicEnemy3);
 
         // create player                        // temporary (include platforms)
         this.player = new Player(this.gameView, this.platforms);
@@ -69,6 +86,9 @@ class Game {
         this.player.move();
         this.player.renderPlayer();
         this.player.weapon.renderWeapon();
+        this.enemies.forEach(enemy => {
+            enemy.move();
+        })
         frames += 1;
 
         
