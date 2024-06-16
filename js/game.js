@@ -37,13 +37,13 @@ class Game {
         const platform2 = new Platform(this.gameView, 50, 420, 200);
         const platform3 = new Platform(this.gameView, 250, 370, 250);
         const platform4 = new Platform(this.gameView, 100, 300, 330);
-        const platform5 = new Platform(this.gameView, 250, 290, 550);
+        const platform5 = new Platform(this.gameView, 250, 290, 520);
         const platform6 = new Platform(this.gameView, 75, 230, 800);
         const platform7 = new Platform(this.gameView, 300, 200, 400);
         const platform8 = new Platform(this.gameView, 75, 200, 210); 
         const platform9 = new Platform(this.gameView, 100, 150, 100);
         const platform10 = new Platform(this.gameView, 350, 100, 250)
-        const platformEnd = new Platform(this.gameView, 170, 100, 730);
+        const platformEnd = new Platform(this.gameView, 170, 100, 720);
 
         this.platforms.push(platform1, platform2, platform3, platform4, platform5,
             platform6, platform7, platform8, platform9, platform10, platformEnd

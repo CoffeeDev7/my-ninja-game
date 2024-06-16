@@ -4,15 +4,16 @@ class Weapon {
         this.thrown = false;
         this.speed = 6;
         this.positionX = 0;
+        this.positionY = 0;
 
         this.gameView = gameView;
 
         this.width = 32;
         this.height = 32;
-        this.top = 0;
-        this.left = 0;
+        this.top = this.owner.top + 25;
+        this.left = this.owner.left;
 
-        this.currentTop = 0;
+        //this.currentTop = 0;
         
         this.element = document.createElement("div");
         this.image = document.createElement("img");
@@ -27,7 +28,7 @@ class Weapon {
         this.element.style.left = `${this.left}px`;
 
         this.element.appendChild(this.image);
-        this.owner.element.appendChild(this.element);
+        this.gameView.appendChild(this.element);
     }
 }
 
@@ -42,15 +43,13 @@ class PlayerWeapon extends Weapon {
             // if not yet thrown, make visible, set in motion.
             console.log("throw");
             this.thrown = true;
-            // need to find the current y position of weapon
-            // maybe difference between weaponrect.top and gameviewrect.top (?)
+            
 
-            // maybe weapon should be relative to game view (?)
-
-            //this.currentTop = parseFloat(this.owner.element.style.top)
-            console.log("current weapon top: ", this.currentTop)
+            this.positionY = this.owner.top + 25;
+            this.left = this.owner.left;
 
             this.element.style.display = "block";
+
             if (direction === "left") {
                 this.positionX = -1
             }
@@ -63,7 +62,10 @@ class PlayerWeapon extends Weapon {
     renderWeapon() {
 
         if (this.thrown) {
+            
             this.left += this.positionX * this.speed;
+            this.top = this.positionY;
+
             const gameViewRect = this.gameView.getBoundingClientRect();
             const weaponRect = this.element.getBoundingClientRect();
    
@@ -74,18 +76,22 @@ class PlayerWeapon extends Weapon {
                 this.returnWeapon();
             }
         }
+        else {
+            this.left = this.owner.left;
+            this.top = this.owner.top + 25;
+        }
         
         // update weapon position
         this.element.style.left = `${this.left}px`;
-        this.element.style.top = `${this.currentTop}px`
+        this.element.style.top = `${this.top}px`
         
     }
 
     // return weapon back to player
     returnWeapon() {
         this.element.style.display = "none";
-        this.left = 0;
-        this.top = 0;
+        this.left = this.owner.left;
+        this.top = this.owner.top + 25;
         this.thrown = false;
         this.positionX = 0;
     }
