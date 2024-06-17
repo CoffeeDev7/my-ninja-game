@@ -1,6 +1,7 @@
 window.addEventListener("load", () => {
 
     const startBtn = document.getElementById("start-btn");
+    const restartBtn = document.getElementById("restart-btn");
 
     let game;
 
@@ -14,6 +15,10 @@ window.addEventListener("load", () => {
         startGame();
     });
 
+
+    restartBtn.addEventListener("click", () => {
+        startGame();
+    })
 
     document.addEventListener("keydown", (event) => {
         console.log(event);

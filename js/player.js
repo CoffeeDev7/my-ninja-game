@@ -73,7 +73,6 @@ class Player {
                         this.velocity = TERMINAL_VELOCITY; 
                     }
                     this.top += this.velocity;
-                    // change logic for falling
                     // take away control of player when falling too long
                     if (this.velocity > this.jumpSpeed) {
                         this.falling = true;
@@ -149,30 +148,35 @@ class Player {
     }
 
     respawn() {
-        const livesElements = document.querySelectorAll(".life");
-        livesElements[this.lives - 1].remove();
 
-        this.lives -= 1;
-        this.element.style.display = "none";
-        this.top = this.startTop;
-        this.left = this.startLeft;
-        let flashCount = 0;
-        const flashInterval = setInterval(() => {
-            if (this.element.style.display === "none") {
-                this.element.style.display = "block";
-            }
-            else {
-                this.element.style.display = "none";
-            }
+        if (this.lives > 0) {
+        
+            const livesElements = document.querySelectorAll(".life");
+            
+            livesElements[this.lives - 1].remove();
 
-            flashCount += 1;
+            this.lives -= 1;
+            this.element.style.display = "none";
+            this.top = this.startTop;
+            this.left = this.startLeft;
+            let flashCount = 0;
+            const flashInterval = setInterval(() => {
+                if (this.element.style.display === "none") {
+                    this.element.style.display = "block";
+                }
+                else {
+                    this.element.style.display = "none";
+                }
 
-            if (flashCount >= 6) {
-                this.element.style.display = "block";
-                this.died = false;
-                clearInterval(flashInterval);
-            }
-        }, 300);
+                flashCount += 1;
+
+                if (flashCount >= 6) {
+                    this.element.style.display = "block";
+                    this.died = false;
+                    clearInterval(flashInterval);
+                }
+            }, 300);
+        }
     }
 
     renderPlayer() {

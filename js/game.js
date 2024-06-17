@@ -17,6 +17,8 @@ class Game {
 
         this.enemyBoss;
 
+        // add game over conditions & view
+
         // display lives -> could maybe use different method
         for (let i = 0; i < 5; i++) {
             const life = document.createElement("div");
@@ -109,6 +111,23 @@ class Game {
                 enemy.element.remove();
             }
         });
+
+        if (this.player.lives === 0) {
+            clearInterval(intervalId);
+            this.gameView.style.display = "none";
+            this.endView.style.display = "flex";
+
+            this.platforms.forEach(platform => {
+                platform.element.remove();
+            });
+
+            this.enemies.forEach(enemy => {
+                enemy.element.remove();
+            });
+            
+            this.player.element.remove();
+            this.player = null;
+        }
 
        }, 1000 / 60);
     }
