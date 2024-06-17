@@ -17,9 +17,7 @@ class Game {
 
         this.enemyBoss;
 
-        // add game over conditions & view
-
-        // display lives -> could maybe use different method
+        this.endLevel = false;
         
 
         this.livesElements = [];
@@ -192,6 +190,7 @@ class Game {
 
     bossLevel() {
         this.gameView.classList.add("boss-level");
+        this.endLevel = true;
 
         // create platforms
         const platform1 = new Platform(this.gameView, 150, 470, 15);
@@ -222,8 +221,11 @@ class Game {
         const intervalId = setInterval(() => {
             this.player.renderPlayer();
             this.player.weapon.renderWeapon();
+            this.enemyBoss.renderEnemy();
+            if (this.enemyBoss.gotHit(this.player.weapon)) {
+                this.enemyBoss.respawn();
+            }
 
-            this.enemyBoss.move();
         }, 1000 / 60);
 
     }

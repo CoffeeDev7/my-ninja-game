@@ -35,11 +35,20 @@ window.addEventListener("load", () => {
             game.player.jump();
         }
         else if (event.code === "KeyP") {
-            game.player.weapon.throw("right");
-
+            if (game.endLevel) {
+                game.player.weapon.throwUp();
+            }
+            else {
+                game.player.weapon.throw("right");
+            }
         }
         else if (event.code === "KeyO") {
-            game.player.weapon.throw("left");
+            if (game.endLevel) {
+                game.player.weapon.throwUp()
+            }
+            else {
+                game.player.weapon.throw("left");
+            }
         }
     });
 

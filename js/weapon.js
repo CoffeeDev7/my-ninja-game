@@ -34,6 +34,7 @@ class PlayerWeapon extends Weapon {
     constructor(imageSrc, owner, gameView) {
         super(imageSrc, owner, gameView);
         this.element.style.display = "none";
+        this.thrownUpwards
     }
 
     throw(direction) {
@@ -61,19 +62,48 @@ class PlayerWeapon extends Weapon {
         }
     }
 
+    throwUp() {
+        if (!this.owner.died) {
+
+            if (!this.thrown) {
+                // if not yet thrown, make visible, set in motion.
+                console.log("throw up");
+                this.thrown = true;
+                this.thrownUpwards = true;
+                
+
+                this.positionX = this.owner.left;
+                this.top = this.owner.top;
+
+                this.positionY = -1;
+
+                this.element.style.display = "block";
+
+            }
+        }
+    }
+
     renderWeapon() {
 
         if (this.thrown) {
             
-            this.left += this.positionX * this.speed;
-            this.top = this.positionY;
+            if (this.thrownUpwards) {
+                this.left = this.positionX;
+                this.top += this.positionY * this.speed;
+            }
+            else {
+                this.left += this.positionX * this.speed;
+                this.top = this.positionY;
+            }
 
             const gameViewRect = this.gameView.getBoundingClientRect();
             const weaponRect = this.element.getBoundingClientRect();
    
 
             // check if weapon is off screen
-            if (weaponRect.left < gameViewRect.left || weaponRect.right > gameViewRect.right) {
+            if (weaponRect.left < gameViewRect.left || weaponRect.right > gameViewRect.right
+                || weaponRect.top < gameViewRect.top 
+            ) {
                 // return weapon
                 this.returnWeapon();
             }
@@ -94,8 +124,12 @@ class PlayerWeapon extends Weapon {
         this.element.style.display = "none";
         this.left = this.owner.left;
         this.top = this.owner.top + 25;
+
         this.thrown = false;
+        this.thrownUpwards = false;
+        
         this.positionX = 0;
+        this.positionY = 0;
     }
 }
 

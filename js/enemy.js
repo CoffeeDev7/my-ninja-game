@@ -52,10 +52,14 @@ class BasicEnemy extends Enemy {
         if ((this.left + this.width) > (this.platform.left + this.platform.width)) {
             this.positionX = -1;  
         }
+    }
 
+    // rendering
+    renderEnemy() {
+        this.move();
         this.element.style.left = `${this.left}px`;
     }
-    // rendering
+
     // collision detection
     didCollide(player) {
         const playerRect = player.getBoundingClientRect();
@@ -123,5 +127,34 @@ class EnemyBoss extends BasicEnemy {
     constructor(gameView, imageSrc, platform) {
         super(gameView, imageSrc, platform)
         this.speed = 3;
+        this.lives = 5;
+    }
+
+    respawn() {
+
+        this.element.style.display = "none";
+        this.lives -= 1;
+
+        // respawn in random position on platform
+        const maxLeft = 600;
+        const minLeft = 120;
+        this.left = Math.floor(Math.random() * (maxLeft - minLeft + 1)) + minLeft;
+
+        const flashInterval = setInterval(() => {
+            if (this.element.style.display === "none") {
+                this.element.style.display = "block";
+            }
+            else {
+                this.element.style.display = "none";
+            }
+
+            flashCount += 1;
+
+            if (flashCount >= 6) {
+                this.element.style.display = "block";
+                this.died = false;
+                clearInterval(flashInterval);
+            }
+        }, 300);
     }
 }
