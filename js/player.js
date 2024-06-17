@@ -27,7 +27,9 @@ class Player {
         this.jumping = false;
         this.velocity = 0;
         this.falling = false;
-        this.positionY = 0;
+        this.standing = false;
+        this.positionY = 0;    // unused
+        // (!) use positionY to determine falling/standing/jumping
         
         // set the player rectangle slightly less wide than actual image, 
         // to account for parts of image sticking out
@@ -46,6 +48,8 @@ class Player {
         this.weapon = new PlayerWeapon("images/player-wpn.png", this, this.gameView);
 
     }
+
+    // (!)check if player is standing in central location
 
     move() {
         console.log("move");
@@ -68,6 +72,7 @@ class Player {
                 // if not standing on platform, add gravity to velocity, add to top
                 const platform = this.isStandingOnPlatform(this.platforms);
                 if (!platform) {
+                    this.standing = false;
                     this.velocity += GRAVITY;
                     if (this.velocity > TERMINAL_VELOCITY) {
                         this.velocity = TERMINAL_VELOCITY; 
@@ -81,6 +86,7 @@ class Player {
                 }
                 else {
                     // if standing, set velocity to 0
+                    this.standing = true;
                     this.falling = false;
                     this.velocity = 0;
                     // set player character correctly on top of platform
@@ -114,11 +120,12 @@ class Player {
         console.log("jump");
 
         // can only jump if not currently jumping and standing on platform
-        if (!this.jumping && this.isStandingOnPlatform(this.platforms)) {
+        if (!this.jumping && !this.falling && this.standing) {
             this.jumping = true;
-            this.falling = false;
+            this.standing = false;
+            //this.falling = false;
             this.velocity = -this.jumpSpeed;
-            this.positionY = this.top;
+            //this.positionY = this.top;
         }
     }
 

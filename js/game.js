@@ -1,5 +1,5 @@
 const GRAVITY = 0.6;
-const TERMINAL_VELOCITY = 15;
+const TERMINAL_VELOCITY = 12;
 
 class Game {
     constructor() {
