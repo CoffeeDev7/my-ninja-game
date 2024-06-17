@@ -98,3 +98,66 @@ class PlayerWeapon extends Weapon {
         this.positionX = 0;
     }
 }
+
+
+// probably should extend playerWeapon (similar methods)
+class EnemyWeapon extends Weapon {
+    constructor(imageSrc, owner, gameView) {
+        super(imageSrc, owner, gameView);
+        this.element.style.display = "none";
+    }
+    // (!)remove element when owner died
+    throw(player) {
+        if (!this.thrown) {
+
+            this.element.style.display = "block";
+            console.log("enemy throw");
+            this.thrown = true;
+
+            const playerPosition = {
+                "positionX": player.left,
+                "positionY": player.top + 32,
+            };
+
+            const direction = {
+                "directionX": playerPosition.positionX - this.owner.left,
+                "directionY": playerPosition.positionY - this.owner.top,
+            };
+
+            const distance = Math.sqrt(direction.directionX ** 2 + direction.directionY ** 2);
+
+            // unit vector
+            this.positionX = direction.directionX / distance;
+            this.positionY = direction.directionY / distance;
+        }
+    }
+    
+    renderWeapon() {
+
+        this.left += this.positionX * this.speed;
+        this.top += this.positionY * this.speed;
+
+        const gameViewRect = this.gameView.getBoundingClientRect();
+        const weaponRect = this.element.getBoundingClientRect();
+
+
+        // check if weapon is off screen
+        if (weaponRect.left < gameViewRect.left || weaponRect.right > gameViewRect.right) {
+            // return weapon
+            this.returnWeapon();
+        }
+
+        // update weapon position
+        this.element.style.left = `${this.left}px`;
+        this.element.style.top = `${this.top}px`
+    }
+
+    returnWeapon() {
+        this.element.style.display = "none";
+        this.left = this.owner.left;
+        this.top = this.owner.top + 25;
+        this.thrown = false;
+        this.positionX = 0;
+        this.positionY = 0;
+    }
+}

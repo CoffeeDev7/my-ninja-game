@@ -91,3 +91,13 @@ class BasicEnemy extends Enemy {
         return false;
     }
 }
+
+
+class ThrowingEnemy extends BasicEnemy {
+    constructor(gameView, imageSrc, platform) {
+        super(gameView, imageSrc, platform)
+        this.speed = 0;
+        this.weapon = new EnemyWeapon("images/enemy-wpn.png", this, this.gameView);
+    }
+
+}

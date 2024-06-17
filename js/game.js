@@ -75,7 +75,14 @@ class Game {
         basicEnemy2.positionX = -1;
         basicEnemy3.positionX = 1;
 
-        this.enemies.push(basicEnemy1, basicEnemy2, basicEnemy3);
+        const throwingEnemy = new ThrowingEnemy(this.gameView, 
+            "images/throwing-enemy-ninja.png", platform9, 
+        )
+
+        throwingEnemy.left -= 42;
+        throwingEnemy.element.style.left = `${throwingEnemy.left}px`;
+
+        this.enemies.push(basicEnemy1, basicEnemy2, basicEnemy3, throwingEnemy);
 
         // create player                        // temporary (include platforms)
         this.player = new Player(this.gameView, this.platforms);
@@ -88,17 +95,27 @@ class Game {
 
         // pause for debugging
         /*
-        frames += 1;
+        
         if (frames > 600) {                
             clearInterval(intervalId);
         }
         */
+
+        frames += 1;
 
         const deadEnemies = [];
 
 
         this.player.renderPlayer();
         this.player.weapon.renderWeapon();
+
+        // temporary /////////////////////////
+        throwingEnemy.weapon.renderWeapon();
+        if (frames % 200 === 0) {
+            throwingEnemy.weapon.throw(this.player);
+        }
+        /////////////////////////
+
         this.enemies.forEach(enemy => {
             enemy.move();
 

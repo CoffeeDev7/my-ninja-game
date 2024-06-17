@@ -6,6 +6,8 @@ class Player {
         ///////////////////////////////
         this.width = 28;
         this.height = 64;
+        
+        // keep track of starting location
         this.startTop = 380;
         this.startLeft = 50;
 
