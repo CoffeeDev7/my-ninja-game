@@ -106,7 +106,7 @@ class EnemyWeapon extends Weapon {
         super(imageSrc, owner, gameView);
         this.element.style.display = "none";
     }
-    // (!)remove element when owner died
+    // (!)remove element when owner died -> in game class
     throw(player) {
         if (!this.thrown) {
 

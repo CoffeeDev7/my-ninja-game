@@ -24,7 +24,7 @@ class BasicEnemy extends Enemy {
         this.positionX = 0;
         this.speed = 2;
 
-        this.died = false;
+        this.died = false; //(!) used in game class
 
         this.element.style.width = `${this.width}px`;
         this.element.style.height = `${this.height}px`;
@@ -100,4 +100,19 @@ class ThrowingEnemy extends BasicEnemy {
         this.weapon = new EnemyWeapon("images/enemy-wpn.png", this, this.gameView);
     }
 
+    weaponHit(playerElement) {
+        const playerRect = playerElement.getBoundingClientRect();
+        const weaponRect = this.weapon.element.getBoundingClientRect();
+
+        if (
+            playerRect.left < weaponRect.right &&
+            playerRect.right > weaponRect.left &&
+            playerRect.top < weaponRect.bottom &&
+            playerRect.bottom > weaponRect.top
+        ) {
+            this.weapon.returnWeapon();
+            return true;
+        }
+        return false;
+    }
 }

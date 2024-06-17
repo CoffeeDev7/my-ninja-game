@@ -44,10 +44,10 @@ class Game {
         // width, top, left
         // starting coords -> 150, 470, 40
         const platform1 = new Platform(this.gameView, 150, 470, 0);
-        const platform2 = new Platform(this.gameView, 50, 420, 200);
-        const platform3 = new Platform(this.gameView, 250, 370, 250);
-        const platform4 = new Platform(this.gameView, 100, 300, 330);
-        const platform5 = new Platform(this.gameView, 250, 290, 520);
+        const platform2 = new Platform(this.gameView, 50, 410, 170);//*
+        const platform3 = new Platform(this.gameView, 250, 350, 250);//*
+        //const platform4 = new Platform(this.gameView, 100, 300, 330);//
+        const platform5 = new Platform(this.gameView, 250, 290, 520);//
         const platform6 = new Platform(this.gameView, 75, 230, 800);
         const platform7 = new Platform(this.gameView, 300, 200, 400);
         const platform8 = new Platform(this.gameView, 75, 200, 210); 
@@ -55,8 +55,10 @@ class Game {
         const platform10 = new Platform(this.gameView, 350, 100, 250);
         const platformEnd = new Platform(this.gameView, 170, 100, 720);
 
-        // add to array for collision detection
-        this.platforms.push(platform1, platform2, platform3, platform4, platform5,
+        //(!) removed 4
+        
+        // add to array for collision detection 
+        this.platforms.push(platform1, platform2, platform3, platform5,
             platform6, platform7, platform8, platform9, platform10, platformEnd
         );
 
@@ -94,8 +96,8 @@ class Game {
         //console.log("interval")
 
         // pause for debugging
-        /*
         
+        /*
         if (frames > 600) {                
             clearInterval(intervalId);
         }
@@ -110,10 +112,15 @@ class Game {
         this.player.weapon.renderWeapon();
 
         // temporary /////////////////////////
-        throwingEnemy.weapon.renderWeapon();
-        if (frames % 200 === 0) {
-            throwingEnemy.weapon.throw(this.player);
+        
+        
+        if (!throwingEnemy.died) {
+            throwingEnemy.weapon.renderWeapon();
+            if (frames % 300 === 0 && !this.player.died) {
+                throwingEnemy.weapon.throw(this.player);
+            }
         }
+        
         /////////////////////////
 
         this.enemies.forEach(enemy => {
@@ -124,10 +131,21 @@ class Game {
                 this.player.respawn();
             }
             else if (enemy.gotHit(this.player.weapon)) {
+                enemy.died = true;
                 deadEnemies.push(enemy);
                 enemy.element.remove();
             }
         });
+
+        if (throwingEnemy.died) {
+            throwingEnemy.weapon.element.remove();
+            //throwingEnemy.weapon = null;
+        }
+        
+        if (throwingEnemy.weaponHit(this.player.element)) {
+            this.player.died = true;
+            this.player.respawn();
+        }
 
         if (this.player.lives === 0) {
             clearInterval(intervalId);
@@ -143,7 +161,6 @@ class Game {
             });
             
             this.player.element.remove();
-            this.player = null;
         }
 
        }, 1000 / 60);
