@@ -20,13 +20,9 @@ class Game {
         // add game over conditions & view
 
         // display lives -> could maybe use different method
-        for (let i = 0; i < 5; i++) {
-            const life = document.createElement("div");
-            life.classList.add("life");
-            document.getElementById("lives").appendChild(life);
-        }
+        
 
-        //this.livesElements = document.querySelectorAll(".life");
+        this.livesElements = [];
     }
 
     start() {
@@ -39,6 +35,22 @@ class Game {
         this.endView.style.display = "none";
 
         this.gameView.style.display = "block";
+
+        ////// needs work //////////
+        if (this.livesElements.length > 0) {
+            this.livesElements.forEach(life => {
+                life.remove();
+            });
+        }
+
+        for (let i = 0; i < 5; i++) {
+            const life = document.createElement("div");
+            life.classList.add("life");
+            document.getElementById("lives").appendChild(life);
+        }
+
+        this.livesElements = document.querySelectorAll(".life");
+        ///////////////////////////////////////////////////////////
 
         // create platforms
         // width, top, left
@@ -53,10 +65,11 @@ class Game {
         const platform8 = new Platform(this.gameView, 75, 200, 210); 
         const platform9 = new Platform(this.gameView, 100, 150, 100);
         const platform10 = new Platform(this.gameView, 350, 100, 250);
-        const platformEnd = new Platform(this.gameView, 170, 100, 720);
+        //const platformEnd = new Platform(this.gameView, 170, 100, 720);
+        const platformEnd = new EndPlatform(this.gameView);
 
         //(!) removed 4
-        
+
         // add to array for collision detection 
         this.platforms.push(platform1, platform2, platform3, platform5,
             platform6, platform7, platform8, platform9, platform10, platformEnd
@@ -147,7 +160,7 @@ class Game {
             this.player.respawn();
         }
 
-        if (this.player.lives === 0) {
+        if (this.player.lives === 0 || platformEnd.passedLevel(this.player.element)) {
             clearInterval(intervalId);
             this.gameView.style.display = "none";
             this.endView.style.display = "flex";

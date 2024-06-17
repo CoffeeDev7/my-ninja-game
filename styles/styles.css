@@ -133,6 +133,14 @@ h1 {
     transform: scaleX(-1);
 }
 
+.temple {
+    min-height: 64px;
+    min-width: 64px;
+    position: absolute;
+    top: -64px;
+    left: 80px;
+}
+
 /* add animation to rotate weapons */
 @keyframes rotate {
     from {
