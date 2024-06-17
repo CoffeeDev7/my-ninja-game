@@ -193,6 +193,7 @@ class Player {
     renderPlayer() {
         // update position of element
         this.move();
+        this.weapon.render();
         if (this.positionX === 1) {
             this.image.classList.remove("flip-image");
         }

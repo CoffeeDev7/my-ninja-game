@@ -99,7 +99,7 @@ h1 {
 
 .player-char {
     position: absolute;
-    border: 2px solid red;
+    /*border: 2px solid red;*/
 }
 
 .player-char-img {
@@ -126,7 +126,7 @@ h1 {
 
 .enemy {
     position: absolute;
-    border: 2px solid red;
+    /*border: 2px solid red;*/
 }
 
 .flip-image {
@@ -143,6 +143,19 @@ h1 {
 
 .boss-level {
     background-color: lightcoral;
+}
+
+.boss-lives {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.boss-life {
+    background-color: darkred;
 }
 
 /* add animation to rotate weapons */

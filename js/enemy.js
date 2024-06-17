@@ -55,7 +55,7 @@ class BasicEnemy extends Enemy {
     }
 
     // rendering
-    renderEnemy() {
+    render() {
         this.move();
         this.element.style.left = `${this.left}px`;
     }
@@ -123,38 +123,70 @@ class ThrowingEnemy extends BasicEnemy {
 }
 
 
+// has lives and can respawn
 class EnemyBoss extends BasicEnemy {
     constructor(gameView, imageSrc, platform) {
         super(gameView, imageSrc, platform)
         this.speed = 3;
         this.lives = 5;
+        this.livesContainer = document.createElement("div");
+        this.livesContainer.classList.add("boss-lives");
+
+        for (let i = 0; i < this.lives; i++) {
+            const lifeElement = document.createElement("div");
+            lifeElement.classList.add("boss-life");
+            lifeElement.classList.add("life");
+            this.livesContainer.appendChild(lifeElement);
+        }
+
+        this.livesContainer.style.top = `${this.top - 10}px`;
+        this.livesContainer.style.left = `${this.left}px`;
+
+        this.gameView.appendChild(this.livesContainer);
+
+        this.lifeElements = document.querySelectorAll(".boss-life");
+    }
+
+    render() {
+        this.move();
+        this.element.style.left = `${this.left}px`;
+        this.livesContainer.style.top = `${this.top - 10}px`;
+        this.livesContainer.style.left = `${this.left}px`;
     }
 
     respawn() {
+        if (!this.died) {
 
-        this.element.style.display = "none";
-        this.lives -= 1;
+            this.lifeElements[this.lives - 1].remove();
 
-        // respawn in random position on platform
-        const maxLeft = 600;
-        const minLeft = 120;
-        this.left = Math.floor(Math.random() * (maxLeft - minLeft + 1)) + minLeft;
+            this.died = true;
+            this.positionX = 0;
+            this.element.style.display = "none";
+            this.lives -= 1;
 
-        const flashInterval = setInterval(() => {
-            if (this.element.style.display === "none") {
-                this.element.style.display = "block";
-            }
-            else {
-                this.element.style.display = "none";
-            }
+            // respawn in random position on platform
+            const maxLeft = 600;
+            const minLeft = 120;
+            this.left = Math.floor(Math.random() * (maxLeft - minLeft + 1)) + minLeft;
 
-            flashCount += 1;
+            let flashCount = 0;
+            const flashInterval = setInterval(() => {
+                if (this.element.style.display === "none") {
+                    this.element.style.display = "block";
+                }
+                else {
+                    this.element.style.display = "none";
+                }
 
-            if (flashCount >= 6) {
-                this.element.style.display = "block";
-                this.died = false;
-                clearInterval(flashInterval);
-            }
-        }, 300);
+                flashCount += 1;
+
+                if (flashCount >= 6) {
+                    this.element.style.display = "block";
+                    this.died = false;
+                    this.positionX = 1;
+                    clearInterval(flashInterval);
+                }
+            }, 300);
+        }
     }
 }

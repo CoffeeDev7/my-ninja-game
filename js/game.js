@@ -88,13 +88,7 @@ class Game {
         ////// needs work //////////
         
 
-        for (let i = 0; i < this.player.lives; i++) {
-            const life = document.createElement("div");
-            life.classList.add("life");
-            document.getElementById("lives").appendChild(life);
-        }
-
-        this.livesElements = document.querySelectorAll(".life");
+        this.displayPlayerLives();
         
         ///////////////////////////////////////////////////////////
 
@@ -118,14 +112,14 @@ class Game {
 
 
             this.player.renderPlayer();
-            this.player.weapon.renderWeapon();
+            //this.player.weapon.renderWeapon();
 
             // temporary /////////////////////////
             
             
             if (!throwingEnemy.died) {
-                throwingEnemy.weapon.renderWeapon();
-                if (frames % 300 === 0 && !this.player.died) {
+                throwingEnemy.weapon.render();
+                if (frames % 250 === 0 && !this.player.died) {
                     throwingEnemy.weapon.throw(this.player);
                 }
             }
@@ -133,7 +127,7 @@ class Game {
             /////////////////////////
 
             this.enemies.forEach(enemy => {
-                enemy.move();
+                enemy.render();
 
                 if (enemy.didCollide(this.player.element)) {
                     this.player.died = true;
@@ -161,29 +155,25 @@ class Game {
                 this.gameView.style.display = "none";
                 this.endView.style.display = "flex";
                 */
-
-
-                this.platforms.forEach(platform => {
-                    platform.element.remove();
-                });
-                this.platforms = [];
-                throwingEnemy.weapon.element.remove();
-                this.enemies.forEach(enemy => {
-                    enemy.element.remove();
-                });
-                this.enemies = [];
-
-                if (this.livesElements.length > 0) {
-                    this.livesElements.forEach(item => {
-                        item.remove();
-                        
-                    });
-                    this.livesElements = [];
+                if (platformEnd.passedLevel(this.player.element)) {
+                    this.gameOver = false;
                 }
+                else {
+                    this.gameOver = true;
+                }
+
+                throwingEnemy.weapon.element.remove();
+                this.restart();
                 
-                this.player.element.remove();
-                this.player = null;
-                this.bossLevel();
+                if (!this.gameOver) {
+                    this.bossLevel();
+                }
+                else {
+                    this.gameView.style.display = "none";
+                    this.endView.style.display = "flex";
+                }
+                //this.player.element.remove();
+                //this.player = null; 
             }
         }, 1000 / 60);
     }
@@ -199,17 +189,96 @@ class Game {
         const platform4 = new Platform(this.gameView, 200, 420, 665);
         const platformBoss = new Platform(this.gameView, 700, 100, 100);
         
-        this.platforms.push(platform1, platform2, platform3, platform4);
+        this.platforms.push(platform1, platform2, platform3, platform4, platformBoss);
+
+        this.player = new Player(this.gameView, this.platforms);
+        this.displayPlayerLives();
 
         //create boss and weapons
+        const magicWeapon1 = new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 120);
+        const magicWeapon2 = new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 700);
+
         // set boss lives
         this.enemyBoss = new EnemyBoss(this.gameView, "images/enemy-boss.png", platformBoss);
-        
+        this.enemies.push(this.enemyBoss, magicWeapon1, magicWeapon2);
+
         this.enemyBoss.positionX = 1;
         // create player
         // set lives
-        this.player = new Player(this.gameView, this.platforms);
+        
 
+        let frames = 0;
+        const intervalId = setInterval(() => {
+
+            frames += 1;
+
+            if (frames % 250 === 0 && !this.player.died) {
+                magicWeapon1.throw(this.player);
+            }
+
+            if (frames % 400 === 0 && !this.player.died) {
+                magicWeapon2.throw(this.player);
+            }
+
+            this.player.renderPlayer();
+            //this.player.weapon.renderWeapon();
+            this.enemies.forEach(enemy => {
+                enemy.render();
+            });
+
+            if (this.enemyBoss.gotHit(this.player.weapon)) {
+                this.enemyBoss.respawn();
+            }
+
+            if (!this.player.died) {
+                if (
+                    magicWeapon1.weaponHit(this.player.element) || 
+                    magicWeapon2.weaponHit(this.player.element)
+                ) {
+                    this.player.died = true;
+                    this.player.respawn();
+                }
+            }
+
+            if (this.enemyBoss.lives === 0 || this.player.lives === 0) {
+                clearInterval(intervalId);
+                this.gameView.style.display = "none";
+                this.endView.style.display = "flex";
+                this.restart();
+            }
+
+        }, 1000 / 60);
+
+    }
+
+    // restart method -> cleanup everything from the level
+    restart() {
+        this.gameView.classList.remove("boss-level");
+        if (this.enemyBoss) {
+            this.enemyBoss.livesContainer.remove();
+        }
+        this.platforms.forEach(platform => {
+            platform.element.remove();
+        });
+        this.platforms = [];
+        
+        this.enemies.forEach(enemy => {
+            enemy.element.remove();
+        });
+        this.enemies = [];
+
+        if (this.livesElements.length > 0) {
+            this.livesElements.forEach(item => {
+                item.remove();
+                
+            });
+            this.livesElements = [];
+        }
+        this.player.element.remove();
+    }
+
+    // show player lives in dom
+    displayPlayerLives() {
         for (let i = 0; i < this.player.lives; i++) {
             const life = document.createElement("div");
             life.classList.add("life");
@@ -217,16 +286,5 @@ class Game {
         }
 
         this.livesElements = document.querySelectorAll(".life");
-
-        const intervalId = setInterval(() => {
-            this.player.renderPlayer();
-            this.player.weapon.renderWeapon();
-            this.enemyBoss.renderEnemy();
-            if (this.enemyBoss.gotHit(this.player.weapon)) {
-                this.enemyBoss.respawn();
-            }
-
-        }, 1000 / 60);
-
     }
 }

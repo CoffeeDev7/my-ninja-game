@@ -1,6 +1,10 @@
 class Weapon {
     constructor(imageSrc, owner, gameView) {
-        this.owner = owner;
+        if (owner) {
+            this.owner = owner;
+            this.top = this.owner.top + 25;
+            this.left = this.owner.left;
+        }
         this.thrown = false;
         this.speed = 6;
         this.positionX = 0;
@@ -10,8 +14,7 @@ class Weapon {
 
         this.width = 32;
         this.height = 32;
-        this.top = this.owner.top + 25;
-        this.left = this.owner.left;
+        
         
         this.element = document.createElement("div");
         this.image = document.createElement("img");
@@ -34,7 +37,7 @@ class PlayerWeapon extends Weapon {
     constructor(imageSrc, owner, gameView) {
         super(imageSrc, owner, gameView);
         this.element.style.display = "none";
-        this.thrownUpwards
+        this.thrownUpwards = false;
     }
 
     throw(direction) {
@@ -83,7 +86,7 @@ class PlayerWeapon extends Weapon {
         }
     }
 
-    renderWeapon() {
+    render() {
 
         if (this.thrown) {
             
@@ -127,7 +130,7 @@ class PlayerWeapon extends Weapon {
 
         this.thrown = false;
         this.thrownUpwards = false;
-        
+
         this.positionX = 0;
         this.positionY = 0;
     }
@@ -168,7 +171,7 @@ class EnemyWeapon extends Weapon {
         }
     }
     
-    renderWeapon() {
+    render() {
 
         this.left += this.positionX * this.speed;
         this.top += this.positionY * this.speed;
@@ -178,7 +181,9 @@ class EnemyWeapon extends Weapon {
 
 
         // check if weapon is off screen
-        if (weaponRect.left < gameViewRect.left || weaponRect.right > gameViewRect.right) {
+        if (weaponRect.left < gameViewRect.left || weaponRect.right > gameViewRect.right
+            || weaponRect.bottom > gameViewRect.bottom || weaponRect.top < gameViewRect.top
+        ) {
             // return weapon
             this.returnWeapon();
         }
@@ -192,6 +197,90 @@ class EnemyWeapon extends Weapon {
         this.element.style.display = "none";
         this.left = this.owner.left;
         this.top = this.owner.top + 25;
+        this.thrown = false;
+        this.positionX = 0;
+        this.positionY = 0;
+    }
+}
+
+
+class MagicalWeapon extends EnemyWeapon {
+    constructor(imageSrc, _, gameView, top, left) {
+        super(imageSrc, _, gameView)
+        this.startTop = top;
+        this.startLeft = left
+        this.top = this.startTop
+        this.left = this.startLeft
+        this.width = 64;
+        this.height = 64;
+
+
+        this.element = document.createElement("div");
+        this.element.classList.add("weapon-element");
+        this.image = document.createElement("img");
+
+        this.image.src = imageSrc;
+        this.image.classList.add("weapon-img");
+
+        this.element.appendChild(this.image);
+        this.gameView.appendChild(this.element);
+
+        this.element.style.width = `${this.width}px`;
+        this.element.style.height = `${this.height}px`;
+        this.element.style.top = `${this.top}px`;
+        this.element.style.left = `${this.left}px`;
+        this.element.style.display = "block";
+
+    }
+
+    throw(player) {
+        if (!this.thrown) {
+
+            this.element.style.display = "block";
+            console.log("enemy throw");
+            this.thrown = true;
+
+            const playerPosition = {
+                "positionX": player.left,
+                "positionY": player.top + 32,
+            };
+
+            const direction = {
+                "directionX": playerPosition.positionX - this.left,
+                "directionY": playerPosition.positionY - this.top,
+            };
+
+            // get distance between 2 points by getting square root of (a^2 + b^2)
+            const distance = Math.sqrt(direction.directionX ** 2 + direction.directionY ** 2);
+
+            // unit vector to ensure weapons travels in constant speed regardless of distance
+            this.positionX = direction.directionX / distance;
+            this.positionY = direction.directionY / distance;
+        }
+    }
+
+    // check if enemy weapon hit player
+    weaponHit(playerElement) {
+        const playerRect = playerElement.getBoundingClientRect();
+        const weaponRect = this.element.getBoundingClientRect();
+
+        if (
+            playerRect.left < weaponRect.right &&
+            playerRect.right > weaponRect.left &&
+            playerRect.top < weaponRect.bottom &&
+            playerRect.bottom > weaponRect.top
+        ) {
+            this.returnWeapon();
+            return true;
+        }
+        return false;
+    }
+
+
+    returnWeapon() {
+        //this.element.style.display = "none";
+        this.left = this.startTop;
+        this.top = this.startLeft;
         this.thrown = false;
         this.positionX = 0;
         this.positionY = 0;
