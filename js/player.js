@@ -159,15 +159,17 @@ class Player {
     respawn() {
 
         if (this.lives > 0) {
-        
-            const livesElements = document.querySelectorAll(".life");
             
+            // remove one life from the game view
+            const livesElements = document.querySelectorAll(".life");
             livesElements[this.lives - 1].remove();
-
+            
+            // remove one life from player, reset position
             this.lives -= 1;
             this.element.style.display = "none";
             this.top = this.startTop;
             this.left = this.startLeft;
+            // let character blink 3 times before giving control back
             let flashCount = 0;
             const flashInterval = setInterval(() => {
                 if (this.element.style.display === "none") {
@@ -191,6 +193,12 @@ class Player {
     renderPlayer() {
         // update position of element
         this.move();
+        if (this.positionX === 1) {
+            this.image.classList.remove("flip-image");
+        }
+        else if (this.positionX === -1) {
+            this.image.classList.add("flip-image");
+        }
         this.element.style.top = `${this.top}px`;
         this.element.style.left = `${this.left}px`;
     }

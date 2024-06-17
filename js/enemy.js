@@ -7,7 +7,6 @@ class Enemy {
 
         this.element.classList.add("enemy");
         this.gameView.appendChild(this.element);
-
         
     }
 }
@@ -93,6 +92,7 @@ class BasicEnemy extends Enemy {
 }
 
 
+// throwing enemy doesn't move
 class ThrowingEnemy extends BasicEnemy {
     constructor(gameView, imageSrc, platform) {
         super(gameView, imageSrc, platform)
@@ -100,6 +100,7 @@ class ThrowingEnemy extends BasicEnemy {
         this.weapon = new EnemyWeapon("images/enemy-wpn.png", this, this.gameView);
     }
 
+    // check if enemy weapon hit player
     weaponHit(playerElement) {
         const playerRect = playerElement.getBoundingClientRect();
         const weaponRect = this.weapon.element.getBoundingClientRect();
@@ -114,5 +115,13 @@ class ThrowingEnemy extends BasicEnemy {
             return true;
         }
         return false;
+    }
+}
+
+
+class EnemyBoss extends BasicEnemy {
+    constructor(gameView, imageSrc, platform) {
+        super(gameView, imageSrc, platform)
+        this.speed = 3;
     }
 }

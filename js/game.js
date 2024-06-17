@@ -26,6 +26,7 @@ class Game {
     }
 
     start() {
+        
         // set height and width for game view
         this.gameView.style.width = `${this.width}px`;
         this.gameView.style.height = `${this.height}px`;
@@ -35,22 +36,6 @@ class Game {
         this.endView.style.display = "none";
 
         this.gameView.style.display = "block";
-
-        ////// needs work //////////
-        if (this.livesElements.length > 0) {
-            this.livesElements.forEach(life => {
-                life.remove();
-            });
-        }
-
-        for (let i = 0; i < 5; i++) {
-            const life = document.createElement("div");
-            life.classList.add("life");
-            document.getElementById("lives").appendChild(life);
-        }
-
-        this.livesElements = document.querySelectorAll(".life");
-        ///////////////////////////////////////////////////////////
 
         // create platforms
         // width, top, left
@@ -102,80 +87,144 @@ class Game {
         // create player                        // temporary (include platforms)
         this.player = new Player(this.gameView, this.platforms);
 
+        ////// needs work //////////
+        
+
+        for (let i = 0; i < this.player.lives; i++) {
+            const life = document.createElement("div");
+            life.classList.add("life");
+            document.getElementById("lives").appendChild(life);
+        }
+
+        this.livesElements = document.querySelectorAll(".life");
+        
+        ///////////////////////////////////////////////////////////
+
        // set interval
        let frames = 0;
 
        const intervalId = setInterval(() => {
-        //console.log("interval")
+            //console.log("interval")
 
-        // pause for debugging
-        
-        /*
-        if (frames > 600) {                
-            clearInterval(intervalId);
-        }
-        */
-
-        frames += 1;
-
-        const deadEnemies = [];
-
-
-        this.player.renderPlayer();
-        this.player.weapon.renderWeapon();
-
-        // temporary /////////////////////////
-        
-        
-        if (!throwingEnemy.died) {
-            throwingEnemy.weapon.renderWeapon();
-            if (frames % 300 === 0 && !this.player.died) {
-                throwingEnemy.weapon.throw(this.player);
+            // pause for debugging
+            
+            /*
+            if (frames > 600) {                
+                clearInterval(intervalId);
             }
-        }
-        
-        /////////////////////////
+            */
 
-        this.enemies.forEach(enemy => {
-            enemy.move();
+            frames += 1;
 
-            if (enemy.didCollide(this.player.element)) {
+            const deadEnemies = [];
+
+
+            this.player.renderPlayer();
+            this.player.weapon.renderWeapon();
+
+            // temporary /////////////////////////
+            
+            
+            if (!throwingEnemy.died) {
+                throwingEnemy.weapon.renderWeapon();
+                if (frames % 300 === 0 && !this.player.died) {
+                    throwingEnemy.weapon.throw(this.player);
+                }
+            }
+            
+            /////////////////////////
+
+            this.enemies.forEach(enemy => {
+                enemy.move();
+
+                if (enemy.didCollide(this.player.element)) {
+                    this.player.died = true;
+                    this.player.respawn();
+                }
+                else if (enemy.gotHit(this.player.weapon)) {
+                    enemy.died = true;
+                    deadEnemies.push(enemy);
+                    enemy.element.remove();
+                }
+            });
+
+            if (throwingEnemy.died) {
+                throwingEnemy.weapon.element.remove();
+            }
+            
+            if (throwingEnemy.weaponHit(this.player.element)) {
                 this.player.died = true;
                 this.player.respawn();
             }
-            else if (enemy.gotHit(this.player.weapon)) {
-                enemy.died = true;
-                deadEnemies.push(enemy);
-                enemy.element.remove();
+
+            if (this.player.lives === 0 || platformEnd.passedLevel(this.player.element)) {
+                clearInterval(intervalId);
+                /*
+                this.gameView.style.display = "none";
+                this.endView.style.display = "flex";
+                */
+
+
+                this.platforms.forEach(platform => {
+                    platform.element.remove();
+                });
+                this.platforms = [];
+                throwingEnemy.weapon.element.remove();
+                this.enemies.forEach(enemy => {
+                    enemy.element.remove();
+                });
+                this.enemies = [];
+
+                if (this.livesElements.length > 0) {
+                    this.livesElements.forEach(item => {
+                        item.remove();
+                        
+                    });
+                    this.livesElements = [];
+                }
+                
+                this.player.element.remove();
+                this.player = null;
+                this.bossLevel();
             }
-        });
+        }, 1000 / 60);
+    }
 
-        if (throwingEnemy.died) {
-            throwingEnemy.weapon.element.remove();
-            //throwingEnemy.weapon = null;
-        }
+    bossLevel() {
+        this.gameView.classList.add("boss-level");
+
+        // create platforms
+        const platform1 = new Platform(this.gameView, 150, 470, 15);
+        const platform2 = new Platform(this.gameView, 200, 420, 215);
+        const platform3 = new Platform(this.gameView, 150, 470, 465);
+        const platform4 = new Platform(this.gameView, 200, 420, 665);
+        const platformBoss = new Platform(this.gameView, 700, 100, 100);
         
-        if (throwingEnemy.weaponHit(this.player.element)) {
-            this.player.died = true;
-            this.player.respawn();
+        this.platforms.push(platform1, platform2, platform3, platform4);
+
+        //create boss and weapons
+        // set boss lives
+        this.enemyBoss = new EnemyBoss(this.gameView, "images/enemy-boss.png", platformBoss);
+        
+        this.enemyBoss.positionX = 1;
+        // create player
+        // set lives
+        this.player = new Player(this.gameView, this.platforms);
+
+        for (let i = 0; i < this.player.lives; i++) {
+            const life = document.createElement("div");
+            life.classList.add("life");
+            document.getElementById("lives").appendChild(life);
         }
 
-        if (this.player.lives === 0 || platformEnd.passedLevel(this.player.element)) {
-            clearInterval(intervalId);
-            this.gameView.style.display = "none";
-            this.endView.style.display = "flex";
+        this.livesElements = document.querySelectorAll(".life");
 
-            this.platforms.forEach(platform => {
-                platform.element.remove();
-            });
+        const intervalId = setInterval(() => {
+            this.player.renderPlayer();
+            this.player.weapon.renderWeapon();
 
-            this.enemies.forEach(enemy => {
-                enemy.element.remove();
-            });
-            
-            this.player.element.remove();
-        }
+            this.enemyBoss.move();
+        }, 1000 / 60);
 
-       }, 1000 / 60);
     }
 }

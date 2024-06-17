@@ -101,6 +101,7 @@ class PlayerWeapon extends Weapon {
 
 
 // probably should extend playerWeapon (similar methods)
+// maybe too many differences between player/enemy weapon
 class EnemyWeapon extends Weapon {
     constructor(imageSrc, owner, gameView) {
         super(imageSrc, owner, gameView);
@@ -124,9 +125,10 @@ class EnemyWeapon extends Weapon {
                 "directionY": playerPosition.positionY - this.owner.top,
             };
 
+            // get distance between 2 points by getting square root of (a^2 + b^2)
             const distance = Math.sqrt(direction.directionX ** 2 + direction.directionY ** 2);
 
-            // unit vector
+            // unit vector to ensure weapons travels in constant speed regardless of distance
             this.positionX = direction.directionX / distance;
             this.positionY = direction.directionY / distance;
         }
