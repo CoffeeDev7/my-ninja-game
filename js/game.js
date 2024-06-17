@@ -247,11 +247,11 @@ class Game {
             if (this.enemyBoss.lives === 0 || this.player.lives === 0) {
                 clearInterval(intervalId);
                 this.restart();
+                this.gameView.style.display = "none";
                 if (this.player.lives === 0) {
                     this.showDeathView();
                 }
                 else {
-                    this.gameView.style.display = "none";
                     this.endView.style.display = "flex";
                 }
             }
@@ -306,8 +306,9 @@ class Game {
         }, 3000)
     }
 
-
+    // add screen for winning game
     showVictoryView() {
-        
+
     }
+    // maybe have message between first level and boss level
 }
