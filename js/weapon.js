@@ -149,7 +149,7 @@ class EnemyWeapon extends Weapon {
         if (!this.thrown) {
 
             this.element.style.display = "block";
-            console.log("enemy throw");
+            //console.log("enemy throw");
             this.thrown = true;
 
             const playerPosition = {
@@ -181,8 +181,11 @@ class EnemyWeapon extends Weapon {
 
 
         // check if weapon is off screen
-        if (weaponRect.left < gameViewRect.left || weaponRect.right > gameViewRect.right
-            || weaponRect.bottom > gameViewRect.bottom || weaponRect.top < gameViewRect.top
+        if (
+            weaponRect.left < gameViewRect.left ||
+            weaponRect.right > gameViewRect.right || 
+            weaponRect.top > gameViewRect.bottom || 
+            weaponRect.top < gameViewRect.top
         ) {
             // return weapon
             this.returnWeapon();
@@ -279,10 +282,12 @@ class MagicalWeapon extends EnemyWeapon {
 
     returnWeapon() {
         //this.element.style.display = "none";
-        this.left = this.startTop;
-        this.top = this.startLeft;
+        
+        this.left = this.startLeft;
+        this.top = this.startTop;
         this.thrown = false;
         this.positionX = 0;
         this.positionY = 0;
+        console.log(`top: ${this.top}, left: ${this.left}`);
     }
 }

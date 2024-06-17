@@ -6,6 +6,7 @@ class Game {
         this.splashView = document.getElementById("splash-view");
         this.gameView = document.getElementById("game-view");
         this.endView = document.getElementById("end-view");
+        this.deathView = document.getElementById("death-view");
         this.width = 900;
         this.height = 500;
 
@@ -34,6 +35,8 @@ class Game {
         this.endView.style.display = "none";
 
         this.gameView.style.display = "block";
+
+        this.gameOver = false;
 
         // create platforms
         // width, top, left
@@ -170,7 +173,7 @@ class Game {
                 }
                 else {
                     this.gameView.style.display = "none";
-                    this.endView.style.display = "flex";
+                    this.showDeathView();
                 }
                 //this.player.element.remove();
                 //this.player = null; 
@@ -179,6 +182,7 @@ class Game {
     }
 
     bossLevel() {
+        this.gameOver = false;
         this.gameView.classList.add("boss-level");
         this.endLevel = true;
 
@@ -212,11 +216,11 @@ class Game {
 
             frames += 1;
 
+            // make sure they don't come at the same time (?)
             if (frames % 250 === 0 && !this.player.died) {
                 magicWeapon1.throw(this.player);
             }
-
-            if (frames % 400 === 0 && !this.player.died) {
+            else if (frames % 400 === 0 && !this.player.died) {
                 magicWeapon2.throw(this.player);
             }
 
@@ -242,9 +246,14 @@ class Game {
 
             if (this.enemyBoss.lives === 0 || this.player.lives === 0) {
                 clearInterval(intervalId);
-                this.gameView.style.display = "none";
-                this.endView.style.display = "flex";
                 this.restart();
+                if (this.player.lives === 0) {
+                    this.showDeathView();
+                }
+                else {
+                    this.gameView.style.display = "none";
+                    this.endView.style.display = "flex";
+                }
             }
 
         }, 1000 / 60);
@@ -286,5 +295,19 @@ class Game {
         }
 
         this.livesElements = document.querySelectorAll(".life");
+    }
+
+
+    showDeathView() {
+        this.deathView.style.display = "block";
+        setTimeout(() => {
+            this.deathView.style.display = "none";
+            this.endView.style.display = "flex";
+        }, 3000)
+    }
+
+
+    showVictoryView() {
+        
     }
 }

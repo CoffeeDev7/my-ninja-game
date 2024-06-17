@@ -54,7 +54,7 @@ class Player {
     // (!)check if player is standing in central location
 
     move() {
-        console.log("move");
+        //console.log("move");
         // move horizontal
         if (!this.died) {
             // jump
@@ -119,7 +119,7 @@ class Player {
     }
 
     jump() {
-        console.log("jump");
+        //console.log("jump");
 
         // can only jump if not currently jumping and standing on platform
         if (!this.jumping && !this.falling && this.standing) {
