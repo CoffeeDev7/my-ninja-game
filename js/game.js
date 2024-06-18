@@ -113,22 +113,15 @@ class Game {
 
             const deadEnemies = [];
 
-
             this.player.renderPlayer();
-            //this.player.weapon.renderWeapon();
-
-            // temporary /////////////////////////
-            
-            
-            if (!throwingEnemy.died) {
-                throwingEnemy.weapon.render();
-                if (frames % 250 === 0 && !this.player.died) {
+          
+            throwingEnemy.weapon.render();
+            if (frames % 250 === 0 && !this.player.died) {
+                if (!throwingEnemy.died) {
                     throwingEnemy.weapon.throw(this.player);
                 }
             }
             
-            /////////////////////////
-
             this.enemies.forEach(enemy => {
                 enemy.render();
 
@@ -144,7 +137,7 @@ class Game {
             });
 
             if (throwingEnemy.died) {
-                throwingEnemy.weapon.element.remove();
+                deadEnemies.push(throwingEnemy.weapon);
             }
             
             if (throwingEnemy.weaponHit(this.player.element)) {
