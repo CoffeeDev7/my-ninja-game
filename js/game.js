@@ -7,6 +7,7 @@ class Game {
         this.gameView = document.getElementById("game-view");
         this.endView = document.getElementById("end-view");
         this.deathView = document.getElementById("death-view");
+        this.victoryView = document.getElementById("victory-view");
         this.width = 900;
         this.height = 500;
 
@@ -301,7 +302,11 @@ class Game {
 
     // add screen for winning game
     showVictoryView() {
-
+        this.victoryView.style.display = "flex"
+        setTimeout(() => {
+            this.victoryView.style.display = "none";
+            this.endView.style.display = "flex";
+        }, 3000)
     }
     // maybe have message between first level and boss level
 }
