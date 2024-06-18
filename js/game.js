@@ -246,7 +246,7 @@ class Game {
                     this.showDeathView();
                 }
                 else {
-                    this.endView.style.display = "flex";
+                    this.showVictoryView();
                 }
             }
 
@@ -306,7 +306,7 @@ class Game {
         setTimeout(() => {
             this.victoryView.style.display = "none";
             this.endView.style.display = "flex";
-        }, 3000)
+        }, 4000)
     }
     // maybe have message between first level and boss level
 }

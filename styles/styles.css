@@ -216,6 +216,26 @@ h1 {
     background-size: cover;    
 }
 
+.victory-view {
+    background-color: blue;
+    background-image: url("../images/victory-view-bg.jpg");
+    background-position: center;
+    background-size: cover;
+    flex-direction: column;
+}
+
+.victory-view > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.victory-view > h1 {
+    color: white;
+}
+
 /* add animation to rotate weapons */
 @keyframes rotate {
     from {
