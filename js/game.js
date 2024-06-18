@@ -8,6 +8,9 @@ class Game {
         this.endView = document.getElementById("end-view");
         this.deathView = document.getElementById("death-view");
         this.victoryView = document.getElementById("victory-view");
+        this.transitionView = document.getElementById("transition-view");
+        this.level = 0;
+
         this.width = 900;
         this.height = 500;
 
@@ -26,6 +29,7 @@ class Game {
     }
 
     start() {
+        this.level = 0;
         
         // set height and width for game view
         this.gameView.style.width = `${this.width}px`;
@@ -89,12 +93,7 @@ class Game {
         // create player                        // temporary (include platforms)
         this.player = new Player(this.gameView, this.platforms);
 
-        ////// needs work //////////
-        
-
         this.displayPlayerLives();
-        
-        ///////////////////////////////////////////////////////////
 
        // set interval
        let frames = 0;
@@ -152,21 +151,21 @@ class Game {
                 this.gameView.style.display = "none";
                 this.endView.style.display = "flex";
                 */
-                if (platformEnd.passedLevel(this.player.element)) {
-                    this.gameOver = false;
+                if (this.player.lives === 0) {
+                    this.gameOver = true;
                 }
                 else {
-                    this.gameOver = true;
+                    this.gameOver = false;
                 }
 
                 throwingEnemy.weapon.element.remove();
                 this.restart();
                 
                 if (!this.gameOver) {
-                    this.bossLevel();
+                    this.level = 1;
+                    this.levelTransition("images/enemy-boss.png", this.level);
                 }
                 else {
-                    this.gameView.style.display = "none";
                     this.showDeathView();
                 }
                 //this.player.element.remove();
@@ -241,7 +240,7 @@ class Game {
             if (this.enemyBoss.lives === 0 || this.player.lives === 0) {
                 clearInterval(intervalId);
                 this.restart();
-                this.gameView.style.display = "none";
+                
                 if (this.player.lives === 0) {
                     this.showDeathView();
                 }
@@ -293,6 +292,7 @@ class Game {
 
 
     showDeathView() {
+        this.gameView.style.display = "none";
         this.deathView.style.display = "block";
         setTimeout(() => {
             this.deathView.style.display = "none";
@@ -302,11 +302,37 @@ class Game {
 
     // add screen for winning game
     showVictoryView() {
+        this.gameView.style.display = "none";
         this.victoryView.style.display = "flex"
         setTimeout(() => {
             this.victoryView.style.display = "none";
             this.endView.style.display = "flex";
-        }, 4000)
+        }, 5000)
     }
-    // maybe have message between first level and boss level
+
+
+    levelTransition(imageSrc, level) {
+        this.gameView.style.display = "none";
+        const transitionImg = document.getElementById("transition-img");
+        transitionImg.src = imageSrc;
+
+        const transitionText = document.getElementById("transition-text");
+
+        if (level === 1) {
+            transitionText.innerHTML = `
+            <strong>WHAT'S THIS!?</strong> It looks like the one who kidnapped the 
+            princess was your <strong>TWIN BROTHER!</strong> He made a deal with the 
+            demons to kidnap her in exhange for dark magical powers. You have to stop him! 
+            `;
+        }
+        this.transitionView.style.display = "flex";
+    }
+
+    nextLevel(level) {
+        this.transitionView.style.display = "none";
+        this.gameView.style.display = "block";
+        if (level === 1) {
+            this.bossLevel();
+        }
+    }
 }

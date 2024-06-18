@@ -46,7 +46,7 @@ class PlayerWeapon extends Weapon {
         
             if (!this.thrown) {
                 // if not yet thrown, make visible, set in motion.
-                console.log("throw");
+                //console.log("throw");
                 this.thrown = true;
                 
 
@@ -70,7 +70,7 @@ class PlayerWeapon extends Weapon {
 
             if (!this.thrown) {
                 // if not yet thrown, make visible, set in motion.
-                console.log("throw up");
+                //console.log("throw up");
                 this.thrown = true;
                 this.thrownUpwards = true;
                 
@@ -240,7 +240,7 @@ class MagicalWeapon extends EnemyWeapon {
         if (!this.thrown) {
 
             this.element.style.display = "block";
-            console.log("enemy throw");
+            //console.log("enemy throw");
             this.thrown = true;
 
             const playerPosition = {

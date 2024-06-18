@@ -236,6 +236,15 @@ h1 {
     color: white;
 }
 
+.transition-view {
+    flex-direction: column;
+    height: 400px;
+    width: 700px;
+    justify-content: space-evenly;
+    padding: 0 2.5rem;
+    text-align: center;
+}
+
 /* add animation to rotate weapons */
 @keyframes rotate {
     from {
