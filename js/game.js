@@ -47,6 +47,8 @@ class Game {
         this.endView.style.display = "none";
 
         this.gameView.style.display = "block";
+        this.gameView.classList.remove("level-two");
+        this.gameView.classList.remove("boss-level");
 
         // create platforms
         // width, top, left
@@ -180,7 +182,7 @@ class Game {
                 // go to level transition or death view
                 if (!this.gameOver) {
                     this.level = 1;
-                    this.levelTransition("images/enemy-boss.png", this.level);
+                    this.levelTransition("images/enemy-sumo.png", this.level);
                 }
                 else {
                     this.showDeathView();
@@ -212,7 +214,8 @@ class Game {
 
         const movingPlatforms = [platform2, platform4, platform6];
 
-        this.platforms.push(platform1, platform2, platform3, platform4, platform5, platform6, platformEnd);
+        this.platforms.push(platform1, platform2, platform3, platform4, 
+            platform5, platform6, platform7, platformEnd);
 
         // create enemies
         const basicEnemy1 = new BasicEnemy(this.gameView, 
@@ -295,12 +298,11 @@ class Game {
                 flyingEnemy1.element.remove();
                 flyingEnemy1 = null;
             }
-            
-
 
             if (specialEnemy1.lives === 0) {
                 specialEnemy1.died = true;
                 specialEnemy1.element.remove();
+                specialEnemy1.livesContainer.remove();
             }
 
             // check for game over / passed level
@@ -499,6 +501,13 @@ class Game {
 
         if (level === 1) {
             transitionText.innerHTML = `
+            <strong>WATCH OUT!</strong> The local kung fu school has teamed up with 
+            the enemy ninjas, and are trying to stop you from reaching the princess.
+            Who could have caused this betrayal ? Keep your eyes open!
+            `;
+        }
+        else if (level === 2) {
+            transitionText.innerHTML = `
             <strong>WHAT'S THIS!?</strong> It looks like the one who kidnapped the 
             princess was your <strong>TWIN BROTHER!</strong> He made a deal with the 
             demons to kidnap her in exhange for dark magical powers. You have to stop him!<br>
@@ -515,6 +524,9 @@ class Game {
         this.gameView.style.display = "block";
         if (level === 1) {
             this.levelTwo();
+        }
+        else if (level === 2) {
+            this.bossLevel();
         }
     }
 }
