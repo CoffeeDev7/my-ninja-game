@@ -202,6 +202,7 @@ class Game {
         const platform4 = new MovingPlatform(this.gameView, 100, 220, 285, false, {"start": 219,"end": 305});// move
         const platform5 = new Platform(this.gameView, 200, 130, 495);
         const platform6 = new MovingPlatform(this.gameView, 50, 170, 420, true, {"start": 270, "end": 150});// move
+        const platform7 = new Platform(this.gameView, 125, 410, 700);
         const platformEnd = new EndPlatform(this.gameView);
 
         // move platforms
@@ -222,10 +223,15 @@ class Game {
             "images/enemy-sumo.png", platform5
         );
 
+        let flyingEnemy1 = new FlyingEnemy(this.gameView,
+            "images/flying-enemy-judo.png", platform7
+        );
+
         basicEnemy1.positionX = -1;
         specialEnemy1.positionX = 1;
+        flyingEnemy1.positionX = -1;
 
-        this.enemies.push(basicEnemy1, specialEnemy1);
+        this.enemies.push(basicEnemy1, specialEnemy1, flyingEnemy1);
 
         // create player
         this.player = new Player(this.gameView, this.platforms);
@@ -238,6 +244,22 @@ class Game {
             frames += 1;
 
             const deadEnemies = [];
+
+            // create new flying enemy if there isn't one
+            if (frames % 200 === 0 && !flyingEnemy1) {
+                console.log("enemy died")
+                flyingEnemy1 = new FlyingEnemy(this.gameView,
+                    "images/flying-enemy-judo.png", platform7
+                );
+                this.enemies.push(flyingEnemy1); 
+            } 
+            // fly enemy toward player if player top is high enough
+            if (frames % 300 === 0 && this.player.top < 270) {
+                if (flyingEnemy1 instanceof FlyingEnemy) {
+                    flyingEnemy1.fly(this.player);
+                    console.log("fly (game)")
+                }
+            }
             
             this.player.renderPlayer();
 
@@ -265,6 +287,16 @@ class Game {
                     }
                 }
             });
+
+            //check if flying enemy died, remove from screen
+            if (flyingEnemy1.died) {
+                console.log("enemy deleted")
+                deadEnemies.push(flyingEnemy1);
+                flyingEnemy1.element.remove();
+                flyingEnemy1 = null;
+            }
+            
+
 
             if (specialEnemy1.lives === 0) {
                 specialEnemy1.died = true;

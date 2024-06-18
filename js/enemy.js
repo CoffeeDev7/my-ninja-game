@@ -293,3 +293,65 @@ class MiniBoss extends BasicEnemy {
         }
     }
 }
+
+
+class FlyingEnemy extends BasicEnemy {
+    constructor(gameView, imageSrc, platform) {
+        super(gameView, imageSrc, platform)
+        this.flying = false;
+        this.positionY = 0;
+    }
+
+    fly(player) {
+        
+        if (!this.flying) {
+            this.flying = true;
+            console.log("fly (enemy)");
+            this.element.classList.add("flip-image")
+            this.speed = 2.5;
+
+            const playerPosition = {
+                "positionX": player.left,
+                "positionY": player.top + 32,
+            };
+
+            const direction = {
+                "directionX": playerPosition.positionX - this.left,
+                "directionY": playerPosition.positionY - this.top,
+            };
+
+            // get distance between 2 points by getting square root of (a^2 + b^2)
+            const distance = Math.sqrt(direction.directionX ** 2 + direction.directionY ** 2);
+
+            // unit vector to ensure weapons travels in constant speed regardless of distance
+            this.positionX = direction.directionX / distance;
+            this.positionY = direction.directionY / distance;
+
+        }
+    }
+
+    render() {
+        if (!this.flying) {
+            this.move();
+        }
+        else {
+            this.left += this.positionX * this.speed;
+            this.top += this.positionY * this.speed;
+            const gameViewRect = this.gameView.getBoundingClientRect();
+            const enemyRect = this.element.getBoundingClientRect();
+
+
+            // check if enemy is off screen
+            if (
+                enemyRect.left < gameViewRect.left ||
+                enemyRect.top > gameViewRect.bottom || 
+                enemyRect.top < gameViewRect.top
+            ) {
+                console.log("enemy died")
+                this.died = true;
+            }
+        }
+        this.element.style.left = `${this.left}px`;
+        this.element.style.top = `${this.top}px`;
+    }
+}
