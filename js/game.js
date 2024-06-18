@@ -36,6 +36,7 @@ class Game {
         // starting conditions for new game
         this.level = 0;
         this.gameOver = false;
+        this.endLevel = false;
         
         // set height and width for game view
         this.gameView.style.width = `${this.width}px`;
@@ -57,7 +58,7 @@ class Game {
         const platform5 = new Platform(this.gameView, 250, 290, 520);
         const platform6 = new Platform(this.gameView, 75, 230, 800);
         const platform7 = new Platform(this.gameView, 300, 200, 400);
-        const platform8 = new Platform(this.gameView, 75, 200, 210); 
+        const platform8 = new Platform(this.gameView, 95, 200, 210); 
         const platform9 = new Platform(this.gameView, 100, 150, 100);
         const platform10 = new Platform(this.gameView, 350, 100, 250);
         
@@ -188,9 +189,45 @@ class Game {
         }, 1000 / 60);
     }
 
+
+    levelTwo() {
+        this.gameView.classList.add("level-two");
+
+        const platform1 = new Platform(this.gameView, 150, 470, 15);
+        const platform2 = new MovingPlatform(this.gameView, 100, 420, 185, true, {"start": 470,"end": 300});//move
+        const platform3 = new Platform(this.gameView, 150, 270, 15);
+        const platform4 = new MovingPlatform(this.gameView, 100, 220, 285, false, {"start": 219,"end": 305});// move
+        const platform5 = new Platform(this.gameView, 200, 130, 495);
+        const platform6 = new MovingPlatform(this.gameView, 50, 170, 420, true, {"start": 270, "end": 150});// move
+        const platformEnd = new EndPlatform(this.gameView);
+
+        platform2.positionY = -1;
+        platform4.positionX = 1;
+        platform6.positionY = 1;
+
+        const movingPlatforms = [platform2, platform4, platform6];
+
+        this.platforms.push(platform1, platform2, platform3, 
+            platform4, platform5, platform6, platformEnd)
+
+        this.player = new Player(this.gameView, this.platforms);
+        this.displayPlayerLives();
+
+        setInterval(() => {
+            console.log("interval");
+            this.player.renderPlayer();
+            movingPlatforms.forEach(item => {
+                item.move();
+            });
+        }, 1000 / 60)
+
+
+    }
+
     bossLevel() {
         // activate special controls for final level
-        this.gameOver = false;
+        //this.gameOver = false;
+        this.gameView.classList.remove("level-two");
         this.gameView.classList.add("boss-level");
         this.endLevel = true;
 
@@ -370,7 +407,7 @@ class Game {
         this.transitionView.style.display = "none";
         this.gameView.style.display = "block";
         if (level === 1) {
-            this.bossLevel();
+            this.levelTwo();
         }
     }
 }
