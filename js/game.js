@@ -191,8 +191,11 @@ class Game {
 
 
     levelTwo() {
+        // set background-color
+        this.gameOver = false;
         this.gameView.classList.add("level-two");
 
+        // create platforms
         const platform1 = new Platform(this.gameView, 150, 470, 15);
         const platform2 = new MovingPlatform(this.gameView, 100, 420, 185, true, {"start": 470,"end": 300});//move
         const platform3 = new Platform(this.gameView, 150, 270, 15);
@@ -201,28 +204,100 @@ class Game {
         const platform6 = new MovingPlatform(this.gameView, 50, 170, 420, true, {"start": 270, "end": 150});// move
         const platformEnd = new EndPlatform(this.gameView);
 
+        // move platforms
         platform2.positionY = -1;
         platform4.positionX = 1;
         platform6.positionY = 1;
 
         const movingPlatforms = [platform2, platform4, platform6];
 
-        this.platforms.push(platform1, platform2, platform3, 
-            platform4, platform5, platform6, platformEnd)
+        this.platforms.push(platform1, platform2, platform3, platform4, platform5, platform6, platformEnd);
 
+        // create enemies
+        const basicEnemy1 = new BasicEnemy(this.gameView, 
+            "images/basic-enemy-judo.png", platform3
+        );
+
+        const specialEnemy1 = new MiniBoss(this.gameView, 
+            "images/enemy-sumo.png", platform5
+        );
+
+        basicEnemy1.positionX = -1;
+        specialEnemy1.positionX = 1;
+
+        this.enemies.push(basicEnemy1, specialEnemy1);
+
+        // create player
         this.player = new Player(this.gameView, this.platforms);
         this.displayPlayerLives();
 
-        setInterval(() => {
-            console.log("interval");
+        let frames = 0;
+
+        const intervalId = setInterval(() => {
+
+            frames += 1;
+
+            const deadEnemies = [];
+            
             this.player.renderPlayer();
+
             movingPlatforms.forEach(item => {
                 item.move();
             });
-        }, 1000 / 60)
 
+            // render enemies, detect collision
+            this.enemies.forEach(enemy => {
+                
+                enemy.render();
 
+                if (enemy.didCollide(this.player.element)) {
+                    this.player.died = true;
+                    this.player.respawn();
+                }
+                else if (enemy.gotHit(this.player.weapon)) {
+                    if (enemy instanceof MiniBoss) {
+                        enemy.respawn();
+                    }
+                    else {
+                        enemy.died = true;
+                        deadEnemies.push(enemy);
+                        enemy.element.remove();
+                    }
+                }
+            });
+
+            if (specialEnemy1.lives === 0) {
+                specialEnemy1.died = true;
+                specialEnemy1.element.remove();
+            }
+
+            // check for game over / passed level
+            if (this.player.lives === 0 || platformEnd.passedLevel(this.player.element)) {
+                clearInterval(intervalId);
+
+                if (this.player.lives === 0) {
+                    this.gameOver = true;
+                }
+                else {
+                    this.gameOver = false;
+                }
+
+                // remove all enemies, player, platforms
+                this.restart();
+                
+                // go to level transition or death view
+                if (!this.gameOver) {
+                    this.level = 2;
+                    this.levelTransition("images/enemy-boss.png", this.level);
+                }
+                else {
+                    this.showDeathView();
+                }
+            }
+
+        }, 1000 / 60);
     }
+
 
     bossLevel() {
         // activate special controls for final level

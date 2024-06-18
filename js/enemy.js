@@ -189,3 +189,107 @@ class EnemyBoss extends BasicEnemy {
         }
     }
 }
+
+
+class MiniBoss extends BasicEnemy {
+    constructor(gameView, imageSrc, platform) {
+        super(gameView, imageSrc, platform)
+        this.speed = 1;
+        this.lives = 3;
+        this.jumpHeight = 25;
+        this.jumpSpeed = 2;
+        this.positionY = 0;
+        this.startTop = this.top;
+
+        this.livesContainer = document.createElement("div");
+        this.livesContainer.classList.add("boss-lives");
+
+        for (let i = 0; i < this.lives; i++) {
+            const lifeElement = document.createElement("div");
+            lifeElement.classList.add("boss-life");
+            lifeElement.classList.add("life");
+            this.livesContainer.appendChild(lifeElement);
+        }
+
+        this.livesContainer.style.top = `${this.top - 10}px`;
+        this.livesContainer.style.left = `${this.left}px`;
+
+        this.gameView.appendChild(this.livesContainer);
+
+        this.lifeElements = document.querySelectorAll(".boss-life");
+    }
+
+    move() {
+        // move x axis
+        this.left += this.positionX * this.speed;
+
+        // bounce
+        this.top += this.positionY * this.jumpSpeed;
+        
+        // only bounce when hitting the border of platform
+        if (this.left < this.platform.left) {
+            this.positionX = 1;
+            if (this.top === this.startTop) {
+                this.positionY = -1; 
+            } 
+        }
+
+        if ((this.left + this.width) > (this.platform.left + this.platform.width)) {
+            this.positionX = -1; 
+            if (this.top === this.startTop) {
+                this.positionY = -1; 
+            } 
+        }
+
+        if (this.top < this.startTop - this.jumpHeight) {
+            this.positionY = 1;
+        }
+
+        if (this.top > this.startTop) {
+            this.positionY = 0;
+            this.top = this.startTop;
+        }
+    }
+
+    render() {
+        this.move();
+        this.element.style.left = `${this.left}px`;
+        this.element.style.top = `${this.top}px`;
+        this.livesContainer.style.top = `${this.top - 10}px`;
+        this.livesContainer.style.left = `${this.left + 10}px`;
+    }
+
+    respawn() {
+        if (!this.died) {
+
+            this.lifeElements[this.lives - 1].remove();
+
+            this.died = true;
+            this.positionX = 0;
+            this.positionY = 0;
+            this.element.style.display = "none";
+            this.lives -= 1;
+
+            this.top = this.startTop;
+
+            let flashCount = 0;
+            const flashInterval = setInterval(() => {
+                if (this.element.style.display === "none") {
+                    this.element.style.display = "block";
+                }
+                else {
+                    this.element.style.display = "none";
+                }
+
+                flashCount += 1;
+
+                if (flashCount >= 6) {
+                    this.element.style.display = "block";
+                    this.died = false;
+                    this.positionX = 1;
+                    clearInterval(flashInterval);
+                }
+            }, 300);
+        }
+    }
+}
