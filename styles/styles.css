@@ -211,7 +211,7 @@ h1 {
 
 .death-view {
     background-color: black;
-    background-image: url("images/sekiroDeathScreen.jpg");
+    background-image: url("/images/sekiroDeathScreen.jpg");
     background-position: center;
     background-size: cover;    
 }
