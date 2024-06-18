@@ -238,10 +238,10 @@ h1 {
 
 .transition-view {
     flex-direction: column;
-    height: 400px;
+    height: 450px;
     width: 700px;
     justify-content: space-evenly;
-    padding: 0 2.5rem;
+    padding: 0 3rem;
     text-align: center;
 }
 

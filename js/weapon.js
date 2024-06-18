@@ -41,12 +41,11 @@ class PlayerWeapon extends Weapon {
     }
 
     throw(direction) {
+        // only allow throw when player didn't die 
         if (!this.owner.died) {
 
-        
+            // if not yet thrown, make visible, set in motion.
             if (!this.thrown) {
-                // if not yet thrown, make visible, set in motion.
-                //console.log("throw");
                 this.thrown = true;
                 
 
@@ -65,12 +64,11 @@ class PlayerWeapon extends Weapon {
         }
     }
 
+    // special throw for final level
     throwUp() {
         if (!this.owner.died) {
 
             if (!this.thrown) {
-                // if not yet thrown, make visible, set in motion.
-                //console.log("throw up");
                 this.thrown = true;
                 this.thrownUpwards = true;
                 
@@ -86,8 +84,10 @@ class PlayerWeapon extends Weapon {
         }
     }
 
+    // render weapon
     render() {
 
+        // if thrown, keep going in straight line
         if (this.thrown) {
             
             if (this.thrownUpwards) {
@@ -111,6 +111,7 @@ class PlayerWeapon extends Weapon {
                 this.returnWeapon();
             }
         }
+        // if not thrown, keep weapon behind player
         else {
             this.left = this.owner.left;
             this.top = this.owner.top + 25;
@@ -137,26 +138,25 @@ class PlayerWeapon extends Weapon {
 }
 
 
-// probably should extend playerWeapon (similar methods)
-// maybe too many differences between player/enemy weapon
 class EnemyWeapon extends Weapon {
     constructor(imageSrc, owner, gameView) {
         super(imageSrc, owner, gameView);
         this.element.style.display = "none";
     }
-    // (!)remove element when owner died -> in game class
+    // only allow throw when not yet thrown
     throw(player) {
         if (!this.thrown) {
 
             this.element.style.display = "block";
-            //console.log("enemy throw");
             this.thrown = true;
 
+            // get player's current location (x, y)
             const playerPosition = {
                 "positionX": player.left,
                 "positionY": player.top + 32,
             };
 
+            // determine direction by getting the difference between owner and player's (x, y) coords
             const direction = {
                 "directionX": playerPosition.positionX - this.owner.left,
                 "directionY": playerPosition.positionY - this.owner.top,
@@ -207,6 +207,7 @@ class EnemyWeapon extends Weapon {
 }
 
 
+// weapon without owner
 class MagicalWeapon extends EnemyWeapon {
     constructor(imageSrc, _, gameView, top, left) {
         super(imageSrc, _, gameView)
@@ -214,6 +215,8 @@ class MagicalWeapon extends EnemyWeapon {
         this.startLeft = left
         this.top = this.startTop
         this.left = this.startLeft
+
+        // larger than regular weapon
         this.width = 64;
         this.height = 64;
 
@@ -236,11 +239,11 @@ class MagicalWeapon extends EnemyWeapon {
 
     }
 
+    // similar to enemyWeapon throw() except starting position is not based on owner
     throw(player) {
         if (!this.thrown) {
 
             this.element.style.display = "block";
-            //console.log("enemy throw");
             this.thrown = true;
 
             const playerPosition = {
@@ -279,15 +282,14 @@ class MagicalWeapon extends EnemyWeapon {
         return false;
     }
 
-
+    // return to original position
     returnWeapon() {
-        //this.element.style.display = "none";
-        
         this.left = this.startLeft;
         this.top = this.startTop;
+
         this.thrown = false;
+
         this.positionX = 0;
         this.positionY = 0;
-        console.log(`top: ${this.top}, left: ${this.left}`);
     }
 }

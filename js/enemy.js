@@ -29,8 +29,6 @@ class BasicEnemy extends Enemy {
         this.element.style.height = `${this.height}px`;
         this.element.style.top = `${this.top}px`;
         this.element.style.left = `${this.left}px`;
-
-        // speed
     }
 
     // movement
@@ -60,7 +58,7 @@ class BasicEnemy extends Enemy {
         this.element.style.left = `${this.left}px`;
     }
 
-    // collision detection
+    // collision detection (enemy hit player)
     didCollide(player) {
         const playerRect = player.getBoundingClientRect();
         const enemyRect = this.element.getBoundingClientRect();
@@ -77,6 +75,7 @@ class BasicEnemy extends Enemy {
         return false;
     }
 
+    // (enemy got hit by player weapon)
     gotHit(playerWeapon) {
         const weaponRect = playerWeapon.element.getBoundingClientRect();
         const enemyRect = this.element.getBoundingClientRect();

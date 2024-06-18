@@ -17,6 +17,7 @@ class Platform {
 
 }
 
+// add flag and method to determine when level has been passed
 class EndPlatform extends Platform {
     constructor(gameView) {
         super(gameView)
@@ -51,6 +52,7 @@ class EndPlatform extends Platform {
         return false;
     }
 }
+
 
 class MovingPlatform extends Platform {
 
