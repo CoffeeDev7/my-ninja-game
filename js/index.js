@@ -9,7 +9,7 @@ window.addEventListener("load", () => {
     function startGame() {
         game = new Game();
         console.log("start game");
-        game.levelThree();
+        game.start();
     }
 
     startBtn.addEventListener("click", () => {

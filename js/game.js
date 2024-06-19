@@ -208,7 +208,7 @@ class Game {
         platform4.positionX = 1;
         platform6.positionY = 1;
 
-        const movingPlatforms = [platform2, platform4, platform6];
+        //const movingPlatforms = [platform2, platform4, platform6];
 
         this.platforms.push(platform1, platform2, platform3, platform4, 
             platform5, platform6, platform7, platformEnd);
@@ -262,8 +262,10 @@ class Game {
             
             this.player.renderPlayer();
 
-            movingPlatforms.forEach(item => {
-                item.move();
+            this.platforms.forEach(platform => {
+                if (platform instanceof MovingPlatform) {
+                    platform.move();
+                }
             });
 
             // render enemies, detect collision
@@ -310,79 +312,51 @@ class Game {
                 }
 
                 // remove all enemies, player, platforms
-                movingPlatforms = [];
+                //movingPlatforms = [];
                 this.restart();
                 
                 // go to level transition or death view
                 if (!this.gameOver) {
                     this.level = 2;
-                    this.levelTransition("images/enemy-boss.png", this.level);
+                    this.levelTransition("images/demon-1.png", this.level);
                 }
                 else {
                     this.showDeathView();
                 }
             }
-
         }, 1000 / 60);
     }
 
 
     levelThree() {
         // set background color 
-        this.gameView.classList.remove("level-two");
         this.gameView.classList.add("level-three");
-
-        // set height and width for game view /////////////////////
-        this.splashView.style.display = "none";
-        this.gameView.style.width = `${this.width}px`;
-        this.gameView.style.height = `${this.height}px`;
-        /////////////////////////////////////////////////////
 
         // create platforms
         const platform1 = new Platform(this.gameView, 150, 470, 15);
         const platform2 = new MovingPlatform(this.gameView, 210, 410, 200,
             false, {"start": 200, "end": 400}
         );
-        /*
-        const platform3 = new MovingPlatform(this.gameView, 150, 380, 600,
-            true, {"start": 400, "end": 220}
-        );
-        */
-       const platform3 = new Platform(this.gameView, 75, 350, 620);
-
-       /*
-        const platform4 = new MovingPlatform(this.gameView, 150, 280, 400,
-            false, {"start": 200, "end": 400}
-        );
-        */
-        const platform5 = new MovingPlatform(this.gameView, 150, 220, 20, 
+        const platform3 = new Platform(this.gameView, 75, 350, 620);
+        const platform4 = new MovingPlatform(this.gameView, 150, 220, 20, 
             true, {"start": 270, "end": 120}
         );
-        /*
-        const platform6 = new MovingPlatform(this.gameView, 150, 100, 200, 
-            false, {"start": 200, "end": 560}
-        );
-        */
         const platformEnd = new EndPlatform(this.gameView);
 
         // move platforms
         platform2.positionX = -1;
-        //platform3.positionY = -1;
-        //platform4.positionX = 1;
-        platform5.positionY = -1;
-        //platform6.positionX = -1;
+        platform4.positionY = -1;
+
 
         platform2.speed = 2;
-        platform5.speed = 2;
-        //platform3.speed = 0.8;
-        //platform4.speed = 1.5;
-        //platform6.speed = 1.3;
+        platform4.speed = 2;
 
         // change Y of moving platform
         const position1 = 410
         const position2 = 290
         const position3 = 100
 
+        // change position of platform at at regular interval
         const platformInterval = setInterval(() => {
             if (platform2.top === position1) {
                 platform2.top = position2;
@@ -393,12 +367,12 @@ class Game {
             else {
                 platform2.top = position1;
             }
-        }, 5500)
+        }, 5500);
 
         // add to array
         this.platforms = [
             platform1, platform2, platform3, 
-            platform5, platformEnd
+            platform4, platformEnd
         ];
 
         // create enemies
@@ -433,7 +407,6 @@ class Game {
 
         // create player
         // display lives
-        // create player
         this.player = new Player(this.gameView, this.platforms);
         this.displayPlayerLives();
 
@@ -457,18 +430,35 @@ class Game {
             });
 
             this.platforms.forEach(platform => {
-                
-
                 if (platform instanceof MovingPlatform) {
                     platform.move();
                 }
-
             });
 
             this.player.renderPlayer();
 
-        }, 1000 / 60);
+             // check for game over / passed level
+             if (this.player.lives === 0 || platformEnd.passedLevel(this.player.element)) {
+                clearInterval(intervalId);
+                clearInterval(platformInterval);
 
+                if (this.player.lives === 0) {
+                    this.gameOver = true;
+                }
+
+                // remove all enemies, player, platforms
+                this.restart();
+                
+                // go to level transition or death view
+                if (!this.gameOver) {
+                    this.level = 3;
+                    this.levelTransition("images/enemy-boss.png", this.level);
+                }
+                else {
+                    this.showDeathView();
+                }
+            }
+        }, 1000 / 60);
     }
 
 
@@ -575,6 +565,9 @@ class Game {
     // restart method -> cleanup everything from the level
     restart() {
         this.gameView.classList.remove("boss-level");
+        this.gameView.classList.remove("level-two");
+        this.gameView.classList.remove("level-three");
+
         if (this.enemyBoss) {
             this.enemyBoss.livesContainer.remove();
         }
@@ -647,6 +640,12 @@ class Game {
         }
         else if (level === 2) {
             transitionText.innerHTML = `
+            <strong>CAREFUL!</strong> Someone is using dark magic to summon demons and curse the platforms.
+            This is getting dangerous! There must be some powerful force behind this conspiracy...
+            `;
+        }
+        else if (level === 3) {
+            transitionText.innerHTML = `
             <strong>WHAT'S THIS!?</strong> It looks like the one who kidnapped the 
             princess was your <strong>TWIN BROTHER!</strong> He made a deal with the 
             demons to kidnap her in exhange for dark magical powers. You have to stop him!<br>
@@ -665,6 +664,9 @@ class Game {
             this.levelTwo();
         }
         else if (level === 2) {
+            this.levelThree();
+        }
+        else if (level === 3) {
             this.bossLevel();
         }
     }
