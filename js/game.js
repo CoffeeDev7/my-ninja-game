@@ -1,5 +1,5 @@
 const GRAVITY = 0.6;
-const TERMINAL_VELOCITY = 11;
+const TERMINAL_VELOCITY = 10;
 
 class Game {
     constructor() {
@@ -348,7 +348,7 @@ class Game {
             true, {"start": 400, "end": 220}
         );
         */
-       const platform3 = new Platform(this.gameView, 50, 350, 620);
+       const platform3 = new Platform(this.gameView, 75, 350, 620);
 
        /*
         const platform4 = new MovingPlatform(this.gameView, 150, 280, 400,
@@ -403,18 +403,33 @@ class Game {
 
         // create enemies
         const floatingEnemy1 = new FloatingEnemy(this.gameView,
-            "images/demon-1.png", 75, 500
+            "images/demon-1.png", 75, 500,
+            {"start": 220, "end": 600},
+            {"start": 105, "end": 25}
         );
 
         const floatingEnemy2 = new FloatingEnemy(this.gameView,
-            "images/demon-2.png", 250, 100
+            "images/demon-2.png", 250, 100, 
+            {"start": 70, "end": 200},
+            {"start": 270, "end": 100}
         );
 
         const floatingEnemy3 = new FloatingEnemy(this.gameView,
-            "images/demon-3.png", 200, 700
+            "images/demon-3.png", 200, 700,
+            {"start": 650, "end": 800},
+            {"start": 255, "end": 130}
         );
         // move enemies
+        floatingEnemy1.positionX = -1;
+        floatingEnemy1.positionY = 1;
+
+        floatingEnemy2.positionX = 1;
+        floatingEnemy2.positionY = -1;
+
+        floatingEnemy3.positionX = -1;
+        floatingEnemy3.positionY = 1;
         // add to array
+        this.enemies = [floatingEnemy1, floatingEnemy2, floatingEnemy3];
 
         // create player
         // display lives
@@ -424,35 +439,31 @@ class Game {
 
         // game loop
         const intervalId = setInterval(() => {
-            
+
+            const deadEnemies = [];
+
+            this.enemies.forEach(enemy => {
+                enemy.render();
+
+                if (enemy.didCollide(this.player.element)) {
+                    this.player.died = true;
+                    this.player.respawn();
+                }
+                else if (enemy.gotHit(this.player.weapon)) {
+                    enemy.died = true;
+                    deadEnemies.push(enemy);
+                    enemy.element.remove();
+                }
+            });
+
             this.platforms.forEach(platform => {
-                /*
-                if (this.player.top > platform3.top) {
-                    setTimeout(() => {
-                        platform2.top = 420;
-                    }, 1000)
-                }
-                else if (
-                    this.player.top < platform3.top - 64 &&
-                    this.player.top > platform5.ends.start - 100
-                ) {
-                    setTimeout(() => {
-                        platform2.top = 290;
-                    }, 1000)
-                }
-                else if (
-                    this.player.top < platform5.ends.start - 100
-                ) {
-                    setTimeout(() => {
-                        platform2.top = 100;
-                    }, 1000)
-                }
-                */
+                
 
                 if (platform instanceof MovingPlatform) {
                     platform.move();
                 }
-            })
+
+            });
 
             this.player.renderPlayer();
 

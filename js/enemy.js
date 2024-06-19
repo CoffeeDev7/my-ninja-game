@@ -19,6 +19,10 @@ class BasicEnemy extends Enemy {
             this.top = platform.top - 64;
             this.left = platform.left + 64;
         }
+        else {
+            this.top = 0;
+            this.left = 0;
+        }
         this.width = 64;
         this.height = 64;
         this.platform = platform;
@@ -361,24 +365,47 @@ class FlyingEnemy extends BasicEnemy {
 
 
 // floating enemy
+/*
+1. set start position (top, left),
+2. set borders in which it can move xAxis = {start, end}, yAxis = {start, left}
+*/
 class FloatingEnemy extends BasicEnemy {
-    constructor(gameView, imageSrc, top, left) {
+    constructor(gameView, imageSrc, top, left, xAxis, yAxis) {
         super(gameView, imageSrc)
         this.top = top;
         this.left = left;
+        this.xAxis = xAxis;
+        this.yAxis = yAxis;
+
+        this.speed = 1;
 
         delete this.platform;
 
-        this.element.style.width = `${this.width}px`;
-        this.element.style.height = `${this.height}px`;
-        this.element.style.top = `${this.top}px`;
-        this.element.style.left = `${this.left}px`;
+        this.positionY = 0;
     }
 
     move() {
+        this.top += this.positionY * this.speed;
+        this.left += this.positionX * this.speed;
+
+        if (this.left < this.xAxis.start) {
+            this.positionX = 1;
+        }
+        else if (this.left > this.xAxis.end) {
+            this.positionX = -1;
+        }
+
+        if (this.top < this.yAxis.end) {
+            this.positionY = 1;
+        }
+        else if (this.top > this.yAxis.start) {
+            this.positionY = -1;
+        }
 
     }
     render() {
-
+        this.move();
+        this.element.style.left = `${this.left}px`;
+        this.element.style.top = `${this.top}px`;
     }
 }
