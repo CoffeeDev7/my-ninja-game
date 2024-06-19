@@ -65,6 +65,9 @@ h1 {
                 9px 9px 15px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
+    background-image: url("../images/mountain-bg-2.jpeg");
+    background-position: center;
+    background-size: cover;
 }
 
 .splash-view {
@@ -103,6 +106,7 @@ h1 {
     display: none;
     justify-content: center;
     align-items: center;
+    background-image: none;
 }
 
 .btn {
@@ -145,6 +149,10 @@ h1 {
     position: absolute;
     height: 20px;
     background-color: brown;
+    background-image: url("../images/wall.png");
+    background-position: center;
+    background-size: contain;
+    background-repeat: repeat;
 }
 
 
@@ -194,6 +202,7 @@ h1 {
 
 .boss-level {
     background-color: lightcoral;
+    background-image: url("../images/temple-bg-1.jpeg");;
 }
 
 .boss-lives {

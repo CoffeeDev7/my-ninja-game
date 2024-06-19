@@ -499,6 +499,7 @@ class Game {
             frames += 1;
 
             // action for weapons, throw at regular intervals
+            //(!) ensure they don't get thrown at the same time
             if (frames % 250 === 0 && !this.player.died) {
                 magicWeapon1.throw(this.player);
             }
@@ -559,7 +560,6 @@ class Game {
             }
 
         }, 1000 / 60);
-
     }
 
     // restart method -> cleanup everything from the level
