@@ -402,6 +402,17 @@ class Game {
         ];
 
         // create enemies
+        const floatingEnemy1 = new FloatingEnemy(this.gameView,
+            "images/demon-1.png", 75, 500
+        );
+
+        const floatingEnemy2 = new FloatingEnemy(this.gameView,
+            "images/demon-2.png", 250, 100
+        );
+
+        const floatingEnemy3 = new FloatingEnemy(this.gameView,
+            "images/demon-3.png", 200, 700
+        );
         // move enemies
         // add to array
 

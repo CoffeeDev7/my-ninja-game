@@ -12,10 +12,13 @@ class Enemy {
 }
 
 class BasicEnemy extends Enemy {
-    constructor(gameView, imageSrc, platform) {
+    constructor(gameView, imageSrc, platform = null) {
         super(gameView, imageSrc)
-        this.top = platform.top - 64;
-        this.left = platform.left + 64;
+        // ensure enemy types without platform can inherit from this class
+        if (platform) {
+            this.top = platform.top - 64;
+            this.left = platform.left + 64;
+        }
         this.width = 64;
         this.height = 64;
         this.platform = platform;
@@ -358,3 +361,24 @@ class FlyingEnemy extends BasicEnemy {
 
 
 // floating enemy
+class FloatingEnemy extends BasicEnemy {
+    constructor(gameView, imageSrc, top, left) {
+        super(gameView, imageSrc)
+        this.top = top;
+        this.left = left;
+
+        delete this.platform;
+
+        this.element.style.width = `${this.width}px`;
+        this.element.style.height = `${this.height}px`;
+        this.element.style.top = `${this.top}px`;
+        this.element.style.left = `${this.left}px`;
+    }
+
+    move() {
+
+    }
+    render() {
+
+    }
+}
