@@ -1,5 +1,5 @@
 const GRAVITY = 0.6;
-const TERMINAL_VELOCITY = 12;
+const TERMINAL_VELOCITY = 11;
 
 class Game {
     constructor() {
@@ -340,7 +340,7 @@ class Game {
 
         // create platforms
         const platform1 = new Platform(this.gameView, 150, 470, 15);
-        const platform2 = new MovingPlatform(this.gameView, 220, 420, 200,
+        const platform2 = new MovingPlatform(this.gameView, 210, 410, 200,
             false, {"start": 200, "end": 400}
         );
         /*
@@ -348,7 +348,7 @@ class Game {
             true, {"start": 400, "end": 220}
         );
         */
-       const platform3 = new Platform(this.gameView, 150, 350, 620);
+       const platform3 = new Platform(this.gameView, 50, 350, 620);
 
        /*
         const platform4 = new MovingPlatform(this.gameView, 150, 280, 400,
@@ -366,16 +366,35 @@ class Game {
         const platformEnd = new EndPlatform(this.gameView);
 
         // move platforms
-        platform2.positionX = 1;
+        platform2.positionX = -1;
         //platform3.positionY = -1;
         //platform4.positionX = 1;
-        platform5.positionY = 1;
+        platform5.positionY = -1;
         //platform6.positionX = -1;
 
-        platform2.speed = 1.8;
+        platform2.speed = 2;
+        platform5.speed = 2;
         //platform3.speed = 0.8;
         //platform4.speed = 1.5;
         //platform6.speed = 1.3;
+
+        // change Y of moving platform
+        const position1 = 410
+        const position2 = 290
+        const position3 = 100
+
+        const platformInterval = setInterval(() => {
+            if (platform2.top === position1) {
+                platform2.top = position2;
+            }
+            else if (platform2.top === position2) {
+                platform2.top = position3;
+            }
+            else {
+                platform2.top = position1;
+            }
+        }, 5500)
+
         // add to array
         this.platforms = [
             platform1, platform2, platform3, 
@@ -396,7 +415,7 @@ class Game {
         const intervalId = setInterval(() => {
             
             this.platforms.forEach(platform => {
-
+                /*
                 if (this.player.top > platform3.top) {
                     setTimeout(() => {
                         platform2.top = 420;
@@ -417,6 +436,7 @@ class Game {
                         platform2.top = 100;
                     }, 1000)
                 }
+                */
 
                 if (platform instanceof MovingPlatform) {
                     platform.move();

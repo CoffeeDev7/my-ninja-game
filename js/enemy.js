@@ -355,3 +355,6 @@ class FlyingEnemy extends BasicEnemy {
         this.element.style.top = `${this.top}px`;
     }
 }
+
+
+// floating enemy
