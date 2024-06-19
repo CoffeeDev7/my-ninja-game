@@ -190,8 +190,6 @@ class Game {
 
 
     levelTwo() {
-        // set background-color
-        this.gameView.classList.add("level-two");
 
         // create platforms
         const platform1 = new Platform(this.gameView, 150, 470, 15);
@@ -329,8 +327,6 @@ class Game {
 
 
     levelThree() {
-        // set background color 
-        this.gameView.classList.add("level-three");
 
         // create platforms
         const platform1 = new Platform(this.gameView, 150, 470, 15);
@@ -464,8 +460,6 @@ class Game {
 
     bossLevel() {
         // activate special controls for final level
-        //this.gameOver = false;
-        this.gameView.classList.remove("level-two");
         this.gameView.classList.add("boss-level");
         this.endLevel = true;
 
@@ -565,8 +559,6 @@ class Game {
     // restart method -> cleanup everything from the level
     restart() {
         this.gameView.classList.remove("boss-level");
-        this.gameView.classList.remove("level-two");
-        this.gameView.classList.remove("level-three");
 
         if (this.enemyBoss) {
             this.enemyBoss.livesContainer.remove();

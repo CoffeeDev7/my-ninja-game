@@ -4,6 +4,7 @@ window.addEventListener("load", () => {
     const restartBtn = document.getElementById("restart-btn");
     const continueBtn = document.getElementById("continue-btn");
 
+
     let game;
 
     function startGame() {
@@ -44,7 +45,7 @@ window.addEventListener("load", () => {
         else if (event.code === "KeyW") {
             //console.log("Key W pressed");
             if (game) {
-                game.player.jump();
+                game.player.jump(); 
             }
         }
         else if (event.code === "KeyP") {

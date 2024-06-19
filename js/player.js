@@ -23,6 +23,7 @@ class Player {
         this.speed = 4;
         this.positionX = 0;
 
+        this.jumpSound = document.getElementById("jump-sound");
 
         // jump -> use velocity and gravity to determine speed of fall
         this.jumpSpeed = 9;      
@@ -119,10 +120,16 @@ class Player {
     }
 
     jump() {
-        //console.log("jump");
 
         // can only jump if not currently jumping and standing on platform
         if (!this.jumping && !this.falling && this.standing) {
+
+            this.jumpSound.play();
+            setTimeout(() => {
+                this.jumpSound.pause();
+                this.jumpSound.currentTime = 0; // reset to the beginning
+            }, 500); // stop after 0.5 seconds (clip is too long, sound is short)
+
             this.jumping = true;
             this.standing = false;
             //this.falling = false;
