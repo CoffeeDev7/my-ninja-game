@@ -148,9 +148,6 @@ class Game {
 
             frames += 1;
 
-            // array of dead enemies for cleanup
-            const deadEnemies = [];
-
             // render player
             this.player.renderPlayer();
           
@@ -175,15 +172,10 @@ class Game {
                 }
                 else if (enemy.gotHit(this.player.weapon)) {
                     enemy.died = true;
-                    deadEnemies.push(enemy);
                     enemy.element.remove();
                 }
             });
 
-            // add enemy weapon to deads array if owner died
-            if (this.enemies[3].died) {
-                deadEnemies.push(this.enemies[3].weapon);
-            }
             
             // detect collision for enemy weapon
             if (this.enemies[3].weaponHit(this.player.element)) {
@@ -221,6 +213,7 @@ class Game {
 
         // create platforms
         // moving platforms need 'isVertical' and borders between which it moves
+        /*
         const platform1 = new Platform(this.gameView, 150, 470, 15);
         const platform2 = new MovingPlatform(this.gameView, 100, 420, 185, 
             true, {"start": 470,"end": 300});
@@ -240,11 +233,27 @@ class Game {
         platform2.positionY = -1;
         platform4.positionX = 1;
         platform6.positionY = 1;
-
+        */
         // add to array
-        this.platforms.push(platform1, platform2, platform3, platform4, 
-            platform5, platform6, platform7, platformEnd);
+        this.platforms.push(
+            new Platform(this.gameView, 150, 470, 15),
+            new MovingPlatform(this.gameView, 100, 420, 185, true, {"start": 470,"end": 300}),
 
+            new Platform(this.gameView, 150, 270, 15),
+            new MovingPlatform(this.gameView, 100, 220, 285, false, {"start": 219,"end": 305}),
+
+            new Platform(this.gameView, 200, 130, 495),
+            new MovingPlatform(this.gameView, 50, 170, 420, true, {"start": 270, "end": 150}),
+
+            new Platform(this.gameView, 125, 410, 700),
+            new EndPlatform(this.gameView),
+        );
+
+        this.platforms[1].positionY = -1;
+        this.platforms[3].positionX = 1;
+        this.platforms[5].positionY = 1;
+
+        /*
         // create enemies
         const basicEnemy1 = new BasicEnemy(this.gameView, 
             "images/basic-enemy-judo.png", platform3
@@ -262,9 +271,18 @@ class Game {
         basicEnemy1.positionX = -1;
         specialEnemy1.positionX = 1;
         flyingEnemy1.positionX = -1;
+        */
 
         // add to array
-        this.enemies.push(basicEnemy1, specialEnemy1, flyingEnemy1);
+        this.enemies.push(
+            new BasicEnemy(this.gameView, "images/basic-enemy-judo.png", this.platforms[2]),
+            new MiniBoss(this.gameView, "images/enemy-sumo.png", this.platforms[4]),
+            new FlyingEnemy(this.gameView, "images/flying-enemy-judo.png", this.platforms[6])
+        );
+
+        this.enemies[0].positionX = -1;
+        this.enemies[1].positionX = 1;
+        this.enemies[2].positionX = -1;
 
         // create player
         this.player = new Player(this.gameView, this.platforms);
@@ -275,26 +293,14 @@ class Game {
         // game loop
         const intervalId = setInterval(() => {
 
-            frames += 1;
-
-            // cleanup dead enemies
-            const deadEnemies = [];
-
-            // create new flying enemy if there isn't one
-            if (frames % 200 === 0 && !flyingEnemy1) {
-
-                flyingEnemy1 = new FlyingEnemy(this.gameView,
-                    "images/flying-enemy-judo.png", platform7
-                );
-                this.enemies.push(flyingEnemy1); 
-            } 
+            frames += 1; 
 
             // fly enemy toward player if player top is high enough
             if (frames % 300 === 0 && this.player.top < 270) {
                 // check if flying enemy is in game
-                if (flyingEnemy1 instanceof FlyingEnemy) {
-                    flyingEnemy1.fly(this.player);
-                }
+               if (!this.enemies[2].died) {
+                this.enemies[2].fly(this.player);
+               }
             }
             
             this.player.renderPlayer();
@@ -320,30 +326,22 @@ class Game {
                     }
                     else {
                         enemy.died = true;
-                        deadEnemies.push(enemy);
                         enemy.element.remove();
+                        if (enemy instanceof FlyingEnemy) {
+                            enemy.return();
+                        }
                     }
                 }
             });
 
-            //check if flying enemy died, remove from screen
-            if (flyingEnemy1.died) {
-
-                deadEnemies.push(flyingEnemy1);
-                flyingEnemy1.element.remove();
-                flyingEnemy1 = null;
-
-            }
-
-            if (specialEnemy1.lives === 0) {
-                specialEnemy1.died = true;
-                specialEnemy1.element.remove();
-                specialEnemy1.livesContainer.remove();
-                deadEnemies.push(specialEnemy1);
+            if (this.enemies[1].lives === 0) {
+                this.enemies[1].died = true;
+                this.enemies[1].element.remove();
+                this.enemies[1].livesContainer.remove();
             }
 
             // check for game over / passed level
-            if (this.player.lives === 0 || platformEnd.passedLevel(this.player.element)) {
+            if (this.player.lives === 0 || this.platforms[this.platforms.length - 1].passedLevel(this.player.element)) {
                 clearInterval(intervalId);
 
                 if (this.player.lives === 0) {
@@ -369,6 +367,7 @@ class Game {
     levelThree() {
 
         // create platforms
+        /*
         const platform1 = new Platform(this.gameView, 150, 470, 15);
         const platform2 = new MovingPlatform(this.gameView, 210, 410, 200,
             false, {"start": 200, "end": 400}
@@ -404,14 +403,47 @@ class Game {
                 platform2.top = position1;
             }
         }, 5500);
+        */
 
         // add to array
-        this.platforms = [
-            platform1, platform2, platform3, 
-            platform4, platformEnd
-        ];
+        this.platforms.push(
+            new Platform(this.gameView, 150, 470, 15),
+            new MovingPlatform(this.gameView, 210, 410, 200, false, {"start": 200, "end": 400}),
 
+            new Platform(this.gameView, 75, 350, 620),
+            new MovingPlatform(this.gameView, 150, 220, 20, true, {"start": 270, "end": 120}),
+
+            new EndPlatform(this.gameView),
+        );
+
+        this.platforms[1].positionX = -1;
+        this.platforms[3].positionY = -1;
+
+
+        this.platforms[1].speed = 2;
+        this.platforms[3].speed = 2;
+
+        // change Y of moving platform
+        const position1 = 410
+        const position2 = 290
+        const position3 = 100
+
+        // change position of platform at at regular interval
+        const platformInterval = setInterval(() => {
+            if (this.platforms[1].top === position1) {
+                this.platforms[1].top = position2;
+            }
+            else if (this.platforms[1].top === position2) {
+                this.platforms[1].top = position3;
+            }
+            else {
+                this.platforms[1].top = position1;
+            }
+        }, 5500);
+
+        
         // create enemies
+        /*
         const floatingEnemy1 = new FloatingEnemy(this.gameView,
             "images/demon-1.png", 75, 500,
             {"start": 220, "end": 600},
@@ -438,8 +470,31 @@ class Game {
 
         floatingEnemy3.positionX = -1;
         floatingEnemy3.positionY = 1;
+        */
         // add to array
-        this.enemies = [floatingEnemy1, floatingEnemy2, floatingEnemy3];
+        this.enemies.push(
+            new FloatingEnemy(this.gameView, "images/demon-1.png", 75, 500,
+                {"start": 220, "end": 600},
+                {"start": 105, "end": 25}
+            ),
+            new FloatingEnemy(this.gameView, "images/demon-2.png", 250, 100, 
+                {"start": 70, "end": 200},
+                {"start": 270, "end": 100}
+            ),
+            new FloatingEnemy(this.gameView, "images/demon-3.png", 200, 700,
+                {"start": 650, "end": 800},
+                {"start": 255, "end": 130}
+            ),
+        );
+
+        this.enemies[0].positionX = -1;
+        this.enemies[0].positionY = 1;
+
+        this.enemies[1].positionX = 1;
+        this.enemies[1].positionY = -1;
+
+        this.enemies[2].positionX = -1;
+        this.enemies[2].positionY = 1;
 
         // create player
         // display lives
@@ -448,8 +503,6 @@ class Game {
 
         // game loop
         const intervalId = setInterval(() => {
-
-            const deadEnemies = [];
 
             this.enemies.forEach(enemy => {
                 enemy.render();
@@ -460,7 +513,6 @@ class Game {
                 }
                 else if (enemy.gotHit(this.player.weapon)) {
                     enemy.died = true;
-                    deadEnemies.push(enemy);
                     enemy.element.remove();
                 }
             });
@@ -474,7 +526,7 @@ class Game {
             this.player.renderPlayer();
 
              // check for game over / passed level
-             if (this.player.lives === 0 || platformEnd.passedLevel(this.player.element)) {
+             if (this.player.lives === 0 || this.platforms[this.platforms.length - 1].passedLevel(this.player.element)) {
                 clearInterval(intervalId);
                 clearInterval(platformInterval);
 
@@ -502,26 +554,39 @@ class Game {
         // activate special controls for final level
         this.gameView.classList.add("boss-level");
         this.endLevel = true;
-
+         /*
         // create platforms, add to array
         const platform1 = new Platform(this.gameView, 150, 470, 15);
         const platform2 = new Platform(this.gameView, 200, 420, 215);
         const platform3 = new Platform(this.gameView, 150, 470, 465);
         const platform4 = new Platform(this.gameView, 200, 420, 665);
         const platformBoss = new Platform(this.gameView, 700, 100, 100);
-        
-        this.platforms.push(platform1, platform2, platform3, platform4, platformBoss);
+        */
+
+        this.platforms.push(
+            new Platform(this.gameView, 150, 470, 15),
+            new Platform(this.gameView, 200, 420, 215),
+            new Platform(this.gameView, 150, 470, 465),
+            new Platform(this.gameView, 200, 420, 665),
+            new Platform(this.gameView, 700, 100, 100),
+        );
 
         // create player, display lives
         this.player = new Player(this.gameView, this.platforms);
         this.displayPlayerLives();
 
+        /*
         //create boss and weapons, add to enemies array
         const magicWeapon1 = new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 120);
         const magicWeapon2 = new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 700);
+        */
 
-        this.enemyBoss = new EnemyBoss(this.gameView, "images/enemy-boss.png", platformBoss);
-        this.enemies.push(this.enemyBoss, magicWeapon1, magicWeapon2);
+        this.enemyBoss = new EnemyBoss(this.gameView, "images/enemy-boss.png", this.platforms[this.platforms.length - 1]);
+
+        this.enemies.push(
+            new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 120),
+            new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 700),
+        );
 
         // start boss movement
         this.enemyBoss.positionX = 1;
@@ -535,14 +600,15 @@ class Game {
             // action for weapons, throw at regular intervals
             //(!) ensure they don't get thrown at the same time
             if (frames % 250 === 0 && !this.player.died) {
-                magicWeapon1.throw(this.player);
+                this.enemies[0].throw(this.player);
             }
             else if (frames % 400 === 0 && !this.player.died) {
-                magicWeapon2.throw(this.player);
+                this.enemies[1].throw(this.player);
             }
 
             // render everything
             this.player.renderPlayer();
+            this.enemyBoss.render();
             this.enemies.forEach(enemy => {
                 enemy.render();
             });
@@ -550,8 +616,8 @@ class Game {
             // randomize movement for enemy 
             if (
                 frames % 100 === 0 && !this.enemyBoss.died &&
-                this.enemyBoss.left > platformBoss.left + 10 &&
-                this.enemyBoss.left < platformBoss.left + platformBoss.width - 10
+                this.enemyBoss.left > this.platforms[4].left + 10 &&
+                this.enemyBoss.left < this.platforms[4].left + this.platforms[4].width - 10
             ) {
                 const changeDirection = Math.random();
                 if (changeDirection > 0.5) {
@@ -572,8 +638,8 @@ class Game {
             // check collison with enemy weapons and player
             if (!this.player.died) {
                 if (
-                    magicWeapon1.weaponHit(this.player.element) || 
-                    magicWeapon2.weaponHit(this.player.element)
+                    this.enemies[0].weaponHit(this.player.element) || 
+                    this.enemies[1].weaponHit(this.player.element)
                 ) {
                     this.player.died = true;
                     this.player.respawn();
@@ -602,6 +668,8 @@ class Game {
 
         if (this.enemyBoss) {
             this.enemyBoss.livesContainer.remove();
+            this.enemyBoss.element.remove();
+            this.enemyBoss = null;
         }
         this.platforms.forEach(platform => {
             platform.element.remove();
@@ -610,6 +678,9 @@ class Game {
         this.platforms = [];
         
         this.enemies.forEach(enemy => {
+            if (enemy.weapon) {
+                enemy.weapon.element.remove();
+            }
             enemy.element.remove();
             enemy = null
         });

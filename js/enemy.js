@@ -5,6 +5,8 @@ class Enemy {
         this.element = document.createElement("img");
         this.element.src = imageSrc;
 
+        this.imageSrc = imageSrc;                // needed for flying enemy, might change
+
         this.element.classList.add("enemy");
         this.gameView.appendChild(this.element);
         
@@ -307,13 +309,14 @@ class FlyingEnemy extends BasicEnemy {
         super(gameView, imageSrc, platform)
         this.flying = false;
         this.positionY = 0;
+        this.startTop = this.top;
+        this.startLeft = this.left;
     }
 
     fly(player) {
         
         if (!this.flying) {
             this.flying = true;
-            console.log("fly (enemy)");
             this.element.classList.add("flip-image")
             this.speed = 2.5;
 
@@ -337,6 +340,25 @@ class FlyingEnemy extends BasicEnemy {
         }
     }
 
+    return() {
+        
+        this.top = this.startTop;
+        this.left = this.startLeft;
+        this.flying = false;
+        this.positionY = 0;
+        this.positionX = 1;
+        this.died = false;
+
+        // recreate element
+        this.element = document.createElement("img");
+        this.element.src = this.imageSrc;
+        this.element.classList.add("enemy");
+
+        setTimeout(() => {
+            this.gameView.appendChild(this.element);
+        }, 2000);
+    }
+
     render() {
         if (!this.flying) {
             this.move();
@@ -354,8 +376,8 @@ class FlyingEnemy extends BasicEnemy {
                 enemyRect.top > gameViewRect.bottom || 
                 enemyRect.top < gameViewRect.top
             ) {
-                console.log("enemy died")
-                this.died = true;
+                this.element.remove();
+                this.return();
             }
         }
         this.element.style.left = `${this.left}px`;
