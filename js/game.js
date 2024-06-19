@@ -171,9 +171,6 @@ class Game {
                 if (this.player.lives === 0) {
                     this.gameOver = true;
                 }
-                else {
-                    this.gameOver = false;
-                }
 
                 // remove all enemies, player, platforms
                 throwingEnemy.weapon.element.remove();
@@ -194,7 +191,6 @@ class Game {
 
     levelTwo() {
         // set background-color
-        this.gameOver = false;
         this.gameView.classList.add("level-two");
 
         // create platforms
@@ -312,11 +308,9 @@ class Game {
                 if (this.player.lives === 0) {
                     this.gameOver = true;
                 }
-                else {
-                    this.gameOver = false;
-                }
 
                 // remove all enemies, player, platforms
+                movingPlatforms = [];
                 this.restart();
                 
                 // go to level transition or death view
@@ -330,6 +324,109 @@ class Game {
             }
 
         }, 1000 / 60);
+    }
+
+
+    levelThree() {
+        // set background color 
+        this.gameView.classList.remove("level-two");
+        this.gameView.classList.add("level-three");
+
+        // set height and width for game view /////////////////////
+        this.splashView.style.display = "none";
+        this.gameView.style.width = `${this.width}px`;
+        this.gameView.style.height = `${this.height}px`;
+        /////////////////////////////////////////////////////
+
+        // create platforms
+        const platform1 = new Platform(this.gameView, 150, 470, 15);
+        const platform2 = new MovingPlatform(this.gameView, 220, 420, 200,
+            false, {"start": 200, "end": 400}
+        );
+        /*
+        const platform3 = new MovingPlatform(this.gameView, 150, 380, 600,
+            true, {"start": 400, "end": 220}
+        );
+        */
+       const platform3 = new Platform(this.gameView, 150, 350, 620);
+
+       /*
+        const platform4 = new MovingPlatform(this.gameView, 150, 280, 400,
+            false, {"start": 200, "end": 400}
+        );
+        */
+        const platform5 = new MovingPlatform(this.gameView, 150, 220, 20, 
+            true, {"start": 270, "end": 120}
+        );
+        /*
+        const platform6 = new MovingPlatform(this.gameView, 150, 100, 200, 
+            false, {"start": 200, "end": 560}
+        );
+        */
+        const platformEnd = new EndPlatform(this.gameView);
+
+        // move platforms
+        platform2.positionX = 1;
+        //platform3.positionY = -1;
+        //platform4.positionX = 1;
+        platform5.positionY = 1;
+        //platform6.positionX = -1;
+
+        platform2.speed = 1.8;
+        //platform3.speed = 0.8;
+        //platform4.speed = 1.5;
+        //platform6.speed = 1.3;
+        // add to array
+        this.platforms = [
+            platform1, platform2, platform3, 
+            platform5, platformEnd
+        ];
+
+        // create enemies
+        // move enemies
+        // add to array
+
+        // create player
+        // display lives
+        // create player
+        this.player = new Player(this.gameView, this.platforms);
+        this.displayPlayerLives();
+
+        // game loop
+        const intervalId = setInterval(() => {
+            
+            this.platforms.forEach(platform => {
+
+                if (this.player.top > platform3.top) {
+                    setTimeout(() => {
+                        platform2.top = 420;
+                    }, 1000)
+                }
+                else if (
+                    this.player.top < platform3.top - 64 &&
+                    this.player.top > platform5.ends.start - 100
+                ) {
+                    setTimeout(() => {
+                        platform2.top = 290;
+                    }, 1000)
+                }
+                else if (
+                    this.player.top < platform5.ends.start - 100
+                ) {
+                    setTimeout(() => {
+                        platform2.top = 100;
+                    }, 1000)
+                }
+
+                if (platform instanceof MovingPlatform) {
+                    platform.move();
+                }
+            })
+
+            this.player.renderPlayer();
+
+        }, 1000 / 60);
+
     }
 
 

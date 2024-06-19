@@ -89,7 +89,6 @@ class MovingPlatform extends Platform {
                 this.positionX = -1;  
             }
         }
-        console.log("platform move");
 
         this.left += this.positionX * this.speed;
         this.top += this.positionY * this.speed;
