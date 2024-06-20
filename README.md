@@ -5,7 +5,7 @@
 ![Game Logo](images/ninja-cover.jpg)
 
 ## Description
-In the Untitled Ninja Game you go on an adventure to save the princess. The goal is to try to reach the top of the mountain by jumping from platform to platform, while staying alive and avoiding the many obstacles and enemies. When the highest level has been reached you face the main enemy in a one on one fight. When the boss is beaten, the princess is saved and you have beat the game. If you lose all your lives at any point along the way you start over from the first level.
+In the Untitled Ninja Game you go on an adventure to save the princess. The goal is to try to reach the top of the mountain by jumping from platform to platform, while staying alive and avoiding the many obstacles and enemies. When the highest level has been reached, you face the main enemy in a one on one fight. When the boss is beaten, the princess is saved and you have beat the game. If you lose all your lives at any point along the way, you start over from the first level.
 
 
 ## MVP
@@ -189,4 +189,4 @@ In the Untitled Ninja Game you go on an adventure to save the princess. The goal
 
 - [Slides Link](http://slides.com) // to do
 - [Github repository Link](https://github.com/tdot123-1/untitled-ninja-game)
-- [Deployment Link](https://github.com/tdot123-1/untitled-ninja-game/actions)
+- [Deployment Link](https://github.com/tdot123-1/untitled-ninja-game/deployments)

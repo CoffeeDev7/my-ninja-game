@@ -2,6 +2,9 @@
 const GRAVITY = 0.6;
 const TERMINAL_VELOCITY = 10;
 
+// control all volumes
+const GLOBAL_VOLUME = 0.3;
+
 class Game {
     constructor(playerSounds, gameSounds) {
         // on screen elements
@@ -17,9 +20,11 @@ class Game {
         this.gameSounds = gameSounds;
 
         // adjust audio
-        this.gameSounds[2].volume = 0.2;
-        this.gameSounds[3].volume = 0.3;
-        this.gameSounds[4].volume = 0.2;
+        this.gameSounds[0].volume = 0.4 * GLOBAL_VOLUME;
+        this.gameSounds[1].volume = 0.4 * GLOBAL_VOLUME;
+        this.gameSounds[2].volume = 0.2 * GLOBAL_VOLUME;
+        this.gameSounds[3].volume = 0.3 * GLOBAL_VOLUME;
+        this.gameSounds[4].volume = 0.2 * GLOBAL_VOLUME;
 
         this.gameSounds[4].loop = true;
 
