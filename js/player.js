@@ -27,8 +27,6 @@ class Player {
         this.speed = 4;
         this.positionX = 0;
 
-        //this.jumpSound = document.getElementById("jump-sound");
-
         // jump -> use velocity and gravity to determine speed of fall
         this.jumpSpeed = 9;      
         this.jumping = false;
@@ -36,7 +34,6 @@ class Player {
         this.falling = false;
         this.standing = false;
         this.positionY = 0;    // unused
-        // (!) use positionY to determine falling/standing/jumping
         
         // set the player rectangle slightly less wide than actual image, 
         // to account for parts of image sticking out
@@ -56,10 +53,8 @@ class Player {
 
     }
 
-    // (!)check if player is standing in central location
 
     move() {
-        //console.log("move");
         // move horizontal
         if (!this.died) {
             // jump
@@ -101,7 +96,7 @@ class Player {
                 }
             }
             
-            // possible solution -> prevent movement when falling
+            // prevent movement when falling
             if (!this.falling) {
                 this.left += this.positionX * this.speed;
             }
@@ -115,7 +110,7 @@ class Player {
                 this.left = this.gameView.clientWidth - this.width;
             }
 
-            // check if player fell out of bounds (in game class)
+            // check if player fell out of bounds
             if (this.top > this.gameView.clientHeight + 20) {
                 this.died = true;
                 this.respawn();
@@ -136,9 +131,7 @@ class Player {
 
             this.jumping = true;
             this.standing = false;
-            //this.falling = false;
             this.velocity = -this.jumpSpeed;
-            //this.positionY = this.top;
         }
     }
 
@@ -147,12 +140,9 @@ class Player {
         // compare bounds of player to each platform on screen
         const playerRect = this.element.getBoundingClientRect();
 
-        //console.log("Player: ", playerRect);
-
         for (let platform of platforms) {
             const platformRect = platform.element.getBoundingClientRect();
 
-            //console.log("Platform :", platformRect);
 
             // detect collision with top of platform, allow some margin
             if (
@@ -168,9 +158,7 @@ class Player {
     }
 
     respawn() {
-        console.log("respawn")
         if (this.lives > 0) {
-            
             
             // remove one life from the game view
             const livesElements = document.querySelectorAll(".life");
@@ -185,10 +173,10 @@ class Player {
                 setTimeout(() => {
                     this.sounds[2].pause();
                     this.sounds[2].currentTime = 0; // reset to the beginning
-                }, 1500); // stop after 0.5 seconds (clip is too long, sound is short)
+                }, 1500); 
             }
             
-
+            // set player back to starting position
             this.element.style.display = "none";
             this.top = this.startTop;
             this.left = this.startLeft;
@@ -229,11 +217,3 @@ class Player {
     }
         
 }
-
-/*
-position: absolute;
-width: 35px;
-height: 64px;
-border: 2px solid red;
-top: 400px; 
-left: 100px; */

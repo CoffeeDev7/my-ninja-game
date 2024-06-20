@@ -5,7 +5,7 @@ class Enemy {
         this.element = document.createElement("img");
         this.element.src = imageSrc;
 
-        this.imageSrc = imageSrc;                // needed for flying enemy, might change
+        this.imageSrc = imageSrc;         // needed to recreate flying enemy respawning
 
         this.element.classList.add("enemy");
         this.gameView.appendChild(this.element);
@@ -32,7 +32,7 @@ class BasicEnemy extends Enemy {
         this.positionX = 0;
         this.speed = 2;
 
-        this.died = false; //(!) used in game class
+        this.died = false; 
 
         this.element.style.width = `${this.width}px`;
         this.element.style.height = `${this.height}px`;
@@ -40,7 +40,7 @@ class BasicEnemy extends Enemy {
         this.element.style.left = `${this.left}px`;
     }
 
-    // movement
+    // movement based on borders of platform
     move() {
 
         if (this.positionX === 1) {
@@ -199,7 +199,7 @@ class EnemyBoss extends BasicEnemy {
     }
 }
 
-
+// has lives and bounces up and down
 class MiniBoss extends BasicEnemy {
     constructor(gameView, imageSrc, platform) {
         super(gameView, imageSrc, platform)
@@ -303,7 +303,7 @@ class MiniBoss extends BasicEnemy {
     }
 }
 
-
+// flies toward player, reappears on death
 class FlyingEnemy extends BasicEnemy {
     constructor(gameView, imageSrc, platform) {
         super(gameView, imageSrc, platform)
@@ -355,6 +355,7 @@ class FlyingEnemy extends BasicEnemy {
         this.element.src = this.imageSrc;
         this.element.classList.add("enemy");
 
+        // return after 2 seconds, if level is passed -> clear timeout
         this.timeoutId = setTimeout(() => {
             this.gameView.appendChild(this.element);
         }, 2000);
@@ -391,7 +392,7 @@ class FlyingEnemy extends BasicEnemy {
 // floating enemy
 /*
 1. set start position (top, left),
-2. set borders in which it can move xAxis = {start, end}, yAxis = {start, left}
+2. set borders in which it can move xAxis = {start, end}, yAxis = {start, end}
 */
 class FloatingEnemy extends BasicEnemy {
     constructor(gameView, imageSrc, top, left, xAxis, yAxis) {
@@ -403,11 +404,13 @@ class FloatingEnemy extends BasicEnemy {
 
         this.speed = 1;
 
+        // remove platform property
         delete this.platform;
 
         this.positionY = 0;
     }
 
+    // move around within box
     move() {
         this.top += this.positionY * this.speed;
         this.left += this.positionX * this.speed;

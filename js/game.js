@@ -1,3 +1,4 @@
+// general physics elements to control falling and jumping
 const GRAVITY = 0.6;
 const TERMINAL_VELOCITY = 10;
 
@@ -89,10 +90,12 @@ class Game {
             new ThrowingEnemy(this.gameView, "images/throwing-enemy-ninja.png", this.platforms[7]),
         );
 
+        // set enemies in motion
         this.enemies[0].positionX = 1;
         this.enemies[1].positionX = -1;
         this.enemies[2].positionX = 1;
 
+        // adjust position of non moving enemy
         this.enemies[3].left -= 42;
         this.enemies[3].element.style.left = `${this.enemies[3].left}px`;
 
@@ -104,14 +107,6 @@ class Game {
        // set interval, track frames
        let frames = 0;
        const intervalId = setInterval(() => {
-
-            // pause for debugging
-            
-            /*
-            if (frames > 600) {                
-                clearInterval(intervalId);
-            }
-            */
 
             frames += 1;
 
@@ -196,6 +191,7 @@ class Game {
             new EndPlatform(this.gameView),
         );
 
+        // move platforms
         this.platforms[1].positionY = -1;
         this.platforms[3].positionX = 1;
         this.platforms[5].positionY = 1;
@@ -207,6 +203,7 @@ class Game {
             new FlyingEnemy(this.gameView, "images/flying-enemy-judo.png", this.platforms[6])
         );
 
+        // move enemies
         this.enemies[0].positionX = -1;
         this.enemies[1].positionX = 1;
         this.enemies[2].positionX = -1;
@@ -216,8 +213,6 @@ class Game {
         this.displayPlayerLives();
 
         let frames = 0;
-        let enemyReturnTimout = false;
-        let timeOutId;
 
         // game loop
         const intervalId = setInterval(() => {
@@ -232,8 +227,10 @@ class Game {
                }
             }
             
+            // render player
             this.player.renderPlayer();
 
+            // move & render platforms
             this.platforms.forEach(platform => {
                 if (platform instanceof MovingPlatform) {
                     platform.move();
@@ -250,12 +247,14 @@ class Game {
                     this.player.respawn();
                 }
                 else if (enemy.gotHit(this.player.weapon)) {
+                    // special enemy can respawn
                     if (enemy instanceof MiniBoss) {
                         enemy.respawn();
                     }
                     else {
                         enemy.died = true;
                         enemy.element.remove();
+                        // flying enemy returns to original position
                         if (enemy instanceof FlyingEnemy) {
                             enemy.return();
                         }
@@ -263,7 +262,7 @@ class Game {
                 }
             });
             
-
+            // remove special enemy when his lives reach 0
             if (this.enemies[1].lives === 0) {
                 this.enemies[1].died = true;
                 this.enemies[1].element.remove();
@@ -317,6 +316,7 @@ class Game {
             new EndPlatform(this.gameView),
         );
 
+        // move platforms, adjust speed
         this.platforms[1].positionX = -1;
         this.platforms[3].positionY = -1;
 
@@ -330,25 +330,19 @@ class Game {
         // change Y of moving platform
         const position1 = 410
         const position2 = 290
-        //const position3 = 100
 
         // change position of platform at at regular interval
         const platformInterval = setInterval(() => {
             if (this.platforms[1].top === position1) {
                 this.platforms[1].top = position2;
             }
-            /*
-            else if (this.platforms[1].top === position2) {
-                this.platforms[1].top = position3;
-            }
-                */
             else {
                 this.platforms[1].top = position1;
             }
         }, 5000);
 
         
-        // create enemies
+        // create enemies, floating enemies receive the bounds between it can move
         this.enemies.push(
             new FloatingEnemy(this.gameView, "images/demon-1.png", 75, 500,
                 {"start": 220, "end": 600},
@@ -364,6 +358,7 @@ class Game {
             ),
         );
 
+        // move enemies
         this.enemies[0].positionX = -1;
         this.enemies[0].positionY = 1;
 
@@ -381,6 +376,7 @@ class Game {
         // game loop
         const intervalId = setInterval(() => {
 
+            // render enemies, detect collision
             this.enemies.forEach(enemy => {
                 enemy.render();
 
@@ -394,12 +390,14 @@ class Game {
                 }
             });
 
+            // render moving platforms
             this.platforms.forEach(platform => {
                 if (platform instanceof MovingPlatform) {
                     platform.move();
                 }
             });
 
+            // render player
             this.player.renderPlayer();
 
              // check for game over / passed level
@@ -478,7 +476,7 @@ class Game {
                 enemy.render();
             });
 
-            // randomize movement for enemy 
+            // randomize movement for enemy boss
             if (
                 frames % 100 === 0 && !this.enemyBoss.died &&
                 this.enemyBoss.left > this.platforms[4].left + 10 &&
@@ -515,6 +513,7 @@ class Game {
             if (this.enemyBoss.lives === 0 || this.player.lives === 0) {
                 clearInterval(intervalId);
 
+                // reset special bg music
                 this.gameSounds[3].loop = false;
                 this.gameSounds[3].pause();
                 this.gameSounds[3].currentTime = 0;
@@ -589,6 +588,7 @@ class Game {
         this.gameSounds[2].play();
         this.gameView.style.display = "none";
         this.deathView.style.display = "block";
+
         setTimeout(() => {
             this.gameSounds[2].pause();
             this.gameSounds[2].currentTime = 0;
@@ -601,7 +601,8 @@ class Game {
     showVictoryView() {
         this.gameSounds[0].play();
         this.gameView.style.display = "none";
-        this.victoryView.style.display = "flex"
+        this.victoryView.style.display = "flex";
+
         setTimeout(() => {
             this.gameSounds[0].pause();
             this.gameSounds[0].currentTime = 0;
@@ -655,6 +656,7 @@ class Game {
             this.levelThree();
         }
         else if (level === 3) {
+            // play special bg music for final level
             this.gameSounds[3].loop = true;
             this.gameSounds[3].play();
             this.bossLevel();

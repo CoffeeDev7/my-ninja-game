@@ -19,7 +19,7 @@ class Weapon {
         this.width = 32;
         this.height = 32;
         
-        
+        // have image inside of element to ensure collision detection with rectangle is accurate
         this.element = document.createElement("div");
         this.image = document.createElement("img");
 

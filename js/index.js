@@ -18,6 +18,7 @@ window.addEventListener("load", () => {
         sound.currentTime = 0;
     });
 
+    // in game sounds
     const victorySound = new Audio("audio/victory-sound.mp3");
     const passedLevelSound = new Audio("audio/passed-level.mp3");
     const deathSound = new Audio("audio/death-sound.mp3");
@@ -60,19 +61,16 @@ window.addEventListener("load", () => {
 
     document.addEventListener("keydown", (event) => {
         if (event.code === "KeyA") {
-            //console.log("Key A pressed")
             if (game) {
                 game.player.positionX = -1
             }
         }
         else if (event.code === "KeyD") {
-            //console.log("Key D pressed")
             if (game) {
                 game.player.positionX = 1;
             }
         }
         else if (event.code === "KeyW") {
-            //console.log("Key W pressed");
             if (game) {
                 game.player.jump(); 
             }
@@ -106,6 +104,5 @@ window.addEventListener("load", () => {
             }
         }
     });
-    
     
 });
