@@ -163,7 +163,7 @@ h1 {
 
 .player-char-img {
     position: absolute;
-    top: -2px;
+    top: 2px;
     left: -25px;
     min-width: 64px;
     min-height: 64px;

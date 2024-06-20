@@ -413,11 +413,16 @@ class Game {
             new Platform(this.gameView, 75, 350, 620),
             new MovingPlatform(this.gameView, 150, 220, 20, true, {"start": 270, "end": 120}),
 
+            new MovingPlatform(this.gameView, 220, 100, 200, false, {"start": 200, "end": 400}),
+
             new EndPlatform(this.gameView),
         );
 
         this.platforms[1].positionX = -1;
         this.platforms[3].positionY = -1;
+
+        this.platforms[4].positionX = 1;
+        this.platforms[4].speed = 1.5;
 
 
         this.platforms[1].speed = 2;
@@ -426,20 +431,22 @@ class Game {
         // change Y of moving platform
         const position1 = 410
         const position2 = 290
-        const position3 = 100
+        //const position3 = 100
 
         // change position of platform at at regular interval
         const platformInterval = setInterval(() => {
             if (this.platforms[1].top === position1) {
                 this.platforms[1].top = position2;
             }
+            /*
             else if (this.platforms[1].top === position2) {
                 this.platforms[1].top = position3;
             }
+                */
             else {
                 this.platforms[1].top = position1;
             }
-        }, 5500);
+        }, 5000);
 
         
         // create enemies
@@ -741,7 +748,7 @@ class Game {
 
         if (level === 1) {
             transitionText.innerHTML = `
-            <strong>WATCH OUT!</strong> The local kung fu school has teamed up with 
+            <strong>WATCH OUT!</strong> The local martial arts champions have teamed up with 
             the enemy ninjas, and are trying to stop you from reaching the princess.
             Who could have caused this betrayal ? Keep your eyes open!
             `;
