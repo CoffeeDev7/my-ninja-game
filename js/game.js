@@ -16,7 +16,11 @@ class Game {
         this.gameSounds = gameSounds;
 
         // adjust audio
-        this.gameSounds[2].volume = 0.3;
+        this.gameSounds[2].volume = 0.2;
+        this.gameSounds[3].volume = 0.3;
+        this.gameSounds[4].volume = 0.2;
+
+        this.gameSounds[4].loop = true;
 
         // current level
         this.level = 0;
@@ -41,6 +45,9 @@ class Game {
 
     start() {
         // starting conditions for new game
+        this.gameSounds[4].currentTime = 0;
+        this.gameSounds[4].play();
+
         this.level = 0;
         this.gameOver = false;
         this.endLevel = false;
@@ -146,6 +153,7 @@ class Game {
             // check for game over / passed level
             if (this.player.lives === 0 || this.platforms[this.platforms.length - 1].passedLevel(this.player.element)) {
                 clearInterval(intervalId);
+                this.gameSounds[4].pause();
 
                 if (this.player.lives === 0) {
                     this.gameOver = true;
@@ -170,7 +178,7 @@ class Game {
 
 
     levelTwo() {
-
+        this.gameSounds[4].play();
         // create platforms
         // moving platforms need 'isVertical' and borders between which it moves
         // add to array
@@ -265,6 +273,7 @@ class Game {
             // check for game over / passed level
             if (this.player.lives === 0 || this.platforms[this.platforms.length - 1].passedLevel(this.player.element)) {
                 clearInterval(intervalId);
+                this.gameSounds[4].pause();
 
                 // clear timeout for respawning enemy
                 if (this.enemies[2].timeoutId !== null) {
@@ -292,6 +301,8 @@ class Game {
 
 
     levelThree() {
+
+        this.gameSounds[4].play();
 
         // create platforms
         this.platforms.push(
@@ -395,6 +406,7 @@ class Game {
              if (this.player.lives === 0 || this.platforms[this.platforms.length - 1].passedLevel(this.player.element)) {
                 clearInterval(intervalId);
                 clearInterval(platformInterval);
+                this.gameSounds[4].pause();
 
                 if (this.player.lives === 0) {
                     this.gameOver = true;
@@ -502,6 +514,11 @@ class Game {
             // check game over, cleanup everything, show appropriate end screen
             if (this.enemyBoss.lives === 0 || this.player.lives === 0) {
                 clearInterval(intervalId);
+
+                this.gameSounds[3].loop = false;
+                this.gameSounds[3].pause();
+                this.gameSounds[3].currentTime = 0;
+
                 this.restart();
                 
                 if (this.player.lives === 0) {
@@ -638,6 +655,8 @@ class Game {
             this.levelThree();
         }
         else if (level === 3) {
+            this.gameSounds[3].loop = true;
+            this.gameSounds[3].play();
             this.bossLevel();
         }
     }

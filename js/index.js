@@ -21,8 +21,10 @@ window.addEventListener("load", () => {
     const victorySound = new Audio("audio/victory-sound.mp3");
     const passedLevelSound = new Audio("audio/passed-level.mp3");
     const deathSound = new Audio("audio/death-sound.mp3");
+    const bossLevelSound = new Audio("audio/boss-level.mp3");
+    const levelsSound = new Audio("audio/levels-bg-sound.mp3");
 
-    const gameSounds = [victorySound, passedLevelSound, deathSound];
+    const gameSounds = [victorySound, passedLevelSound, deathSound, bossLevelSound, levelsSound];
 
     // slightly lower volume, no preload
     gameSounds.forEach(sound => {
