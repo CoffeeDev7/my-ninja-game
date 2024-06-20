@@ -38,10 +38,11 @@ class Weapon {
 }
 
 class PlayerWeapon extends Weapon {
-    constructor(imageSrc, owner, gameView) {
+    constructor(imageSrc, owner, gameView, sound) {
         super(imageSrc, owner, gameView);
         this.element.style.display = "none";
         this.thrownUpwards = false;
+        this.sound = sound;
     }
 
     throw(direction) {
@@ -51,7 +52,7 @@ class PlayerWeapon extends Weapon {
             // if not yet thrown, make visible, set in motion.
             if (!this.thrown) {
                 this.thrown = true;
-                
+                this.sound.play();
 
                 this.positionY = this.owner.top + 25;
                 this.left = this.owner.left;
@@ -76,6 +77,7 @@ class PlayerWeapon extends Weapon {
                 this.thrown = true;
                 this.thrownUpwards = true;
                 
+                this.sound.play();
 
                 this.positionX = this.owner.left;
                 this.top = this.owner.top;
@@ -224,18 +226,6 @@ class MagicalWeapon extends EnemyWeapon {
         // larger than regular weapon
         this.width = 64;
         this.height = 64;
-
-        /*
-        this.element = document.createElement("div");
-        this.element.classList.add("weapon-element");
-        this.image = document.createElement("img");
-
-        this.image.src = imageSrc;
-        this.image.classList.add("weapon-img");
-
-        this.element.appendChild(this.image);
-        this.gameView.appendChild(this.element);
-        */
 
         this.element.style.width = `${this.width}px`;
         this.element.style.height = `${this.height}px`;

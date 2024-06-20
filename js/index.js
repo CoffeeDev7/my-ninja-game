@@ -4,14 +4,36 @@ window.addEventListener("load", () => {
     const restartBtn = document.getElementById("restart-btn");
     const continueBtn = document.getElementById("continue-btn");
 
+    // load sounds
+    const jumpSound = new Audio("audio/jump-effect.mp3");
+    const weaponSound = new Audio("audio/weapon-sound.mp3");
+    const respawnSound = new Audio("audio/respawn-sound.mp3");
+
+    const playerSounds = [jumpSound, weaponSound, respawnSound];
+
+    // preload player sounds
+    playerSounds.forEach(sound => {
+        sound.preload = "auto";
+        sound.currentTime = 0;
+    });
+
+    const victorySound = new Audio("audio/victory-sound.mp3");
+    const passedLevelSound = new Audio("audio/passed-level.mp3");
+    const deathSound = new Audio("audio/death-sound.mp3");
+
+    const gameSounds = [victorySound, passedLevelSound, deathSound];
+    gameSounds.forEach(sound => {
+        sound.currentTime = 0;
+    });
+
 
     let game;
 
     function startGame() {
-        game = new Game();
-        console.log("start game");
+        game = new Game(playerSounds, gameSounds);
         game.start();
     }
+
 
     startBtn.addEventListener("click", () => {
         startGame();

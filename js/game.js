@@ -2,7 +2,7 @@ const GRAVITY = 0.6;
 const TERMINAL_VELOCITY = 10;
 
 class Game {
-    constructor() {
+    constructor(playerSounds, gameSounds) {
         // on screen elements
         this.splashView = document.getElementById("splash-view");
         this.gameView = document.getElementById("game-view");
@@ -10,6 +10,10 @@ class Game {
         this.deathView = document.getElementById("death-view");
         this.victoryView = document.getElementById("victory-view");
         this.transitionView = document.getElementById("transition-view");
+
+        // game audio
+        this.playerSounds = playerSounds;
+        this.gameSounds = gameSounds;
 
         // current level
         this.level = 0;
@@ -51,26 +55,6 @@ class Game {
         // create platforms
         // width, top, left
         // starting coords -> 150, 470, 40
-        /*
-        const platform1 = new Platform(this.gameView, 150, 470, 0);
-        const platform2 = new Platform(this.gameView, 50, 410, 170);
-        const platform3 = new Platform(this.gameView, 250, 350, 250);
-
-        const platform5 = new Platform(this.gameView, 250, 290, 520);
-        const platform6 = new Platform(this.gameView, 75, 230, 800);
-        const platform7 = new Platform(this.gameView, 300, 200, 400);
-
-        const platform8 = new Platform(this.gameView, 95, 200, 210); 
-        const platform9 = new Platform(this.gameView, 100, 150, 100);
-        const platform10 = new Platform(this.gameView, 350, 100, 250);
-        
-        // special platform with flag to signify level is passed
-        const platformEnd = new EndPlatform(this.gameView);
-        */
-
-        //(!) removed platform4
-
-        // add to array for collision detection 
         this.platforms.push(
             new Platform(this.gameView, 150, 470, 0),
             new Platform(this.gameView, 50, 410, 170),
@@ -87,34 +71,7 @@ class Game {
             new EndPlatform(this.gameView),
         );
 
-        /*
         // create enemies
-        const basicEnemy1 = new BasicEnemy(this.gameView, 
-            "images/basic-enemy-ninja-1.png", this.platforms[5]
-        );
-        const basicEnemy2 = new BasicEnemy(this.gameView,
-            "images/basic-enemy-ninja-3.png", this.platforms[2]
-        );
-        const basicEnemy3 = new BasicEnemy(this.gameView,
-            "images/basic-enemy-ninja-2.png", this.platforms[3]
-        );
-
-        // set enemies in motion
-        basicEnemy1.positionX = 1;
-        basicEnemy2.positionX = -1;
-        basicEnemy3.positionX = 1;
-
-        // special enemy
-        const throwingEnemy = new ThrowingEnemy(this.gameView, 
-            "images/throwing-enemy-ninja.png", this.platforms[7], 
-        )
-
-        // set location of special enemy (who doesn't move)
-        throwingEnemy.left -= 42;
-        throwingEnemy.element.style.left = `${throwingEnemy.left}px`;
-        */
-
-        // push to array for collision detection
         this.enemies.push(
             new BasicEnemy(this.gameView, "images/basic-enemy-ninja-1.png", this.platforms[5]), 
             new BasicEnemy(this.gameView, "images/basic-enemy-ninja-3.png", this.platforms[2]), 
@@ -130,7 +87,7 @@ class Game {
         this.enemies[3].element.style.left = `${this.enemies[3].left}px`;
 
         // create player                        
-        this.player = new Player(this.gameView, this.platforms);
+        this.player = new Player(this.gameView, this.platforms, this.playerSounds);
         // display player lives on screen
         this.displayPlayerLives();
 
@@ -208,7 +165,7 @@ class Game {
         }, 1000 / 60);
     }
 
-/////////////////// REMOVE ALL REFERENCES TO PLATFORMS AND ENEMIES /////////////////
+
     levelTwo() {
 
         // create platforms
@@ -244,7 +201,7 @@ class Game {
         this.enemies[2].positionX = -1;
 
         // create player
-        this.player = new Player(this.gameView, this.platforms);
+        this.player = new Player(this.gameView, this.platforms, this.playerSounds);
         this.displayPlayerLives();
 
         let frames = 0;
@@ -404,7 +361,7 @@ class Game {
 
         // create player
         // display lives
-        this.player = new Player(this.gameView, this.platforms);
+        this.player = new Player(this.gameView, this.platforms, this.playerSounds);
         this.displayPlayerLives();
 
         // game loop
@@ -471,7 +428,7 @@ class Game {
         );
 
         // create player, display lives
-        this.player = new Player(this.gameView, this.platforms);
+        this.player = new Player(this.gameView, this.platforms, this.playerSounds);
         this.displayPlayerLives();
 
         // create boss and enemies

@@ -1,9 +1,11 @@
 class Player {
-    constructor(gameView, platforms) {
+    constructor(gameView, platforms, sounds) {
         this.gameView = gameView;
-        // temporary solution //////////
+
         this.platforms = platforms;
-        ///////////////////////////////
+
+        this.sounds = sounds
+
         this.width = 28;
         this.height = 64;
         
@@ -23,7 +25,7 @@ class Player {
         this.speed = 4;
         this.positionX = 0;
 
-        this.jumpSound = document.getElementById("jump-sound");
+        //this.jumpSound = document.getElementById("jump-sound");
 
         // jump -> use velocity and gravity to determine speed of fall
         this.jumpSpeed = 9;      
@@ -48,7 +50,7 @@ class Player {
         this.element.appendChild(this.image);
         this.gameView.appendChild(this.element);
 
-        this.weapon = new PlayerWeapon("images/player-wpn.png", this, this.gameView);
+        this.weapon = new PlayerWeapon("images/player-wpn.png", this, this.gameView, this.sounds[1]);
 
     }
 
@@ -124,10 +126,10 @@ class Player {
         // can only jump if not currently jumping and standing on platform
         if (!this.jumping && !this.falling && this.standing) {
 
-            this.jumpSound.play();
+            this.sounds[0].play();
             setTimeout(() => {
-                this.jumpSound.pause();
-                this.jumpSound.currentTime = 0; // reset to the beginning
+                this.sounds[0].pause();
+                this.sounds[0].currentTime = 0; // reset to the beginning
             }, 500); // stop after 0.5 seconds (clip is too long, sound is short)
 
             this.jumping = true;
@@ -164,8 +166,9 @@ class Player {
     }
 
     respawn() {
-
+        console.log("respawn")
         if (this.lives > 0) {
+            
             
             // remove one life from the game view
             const livesElements = document.querySelectorAll(".life");
@@ -173,6 +176,17 @@ class Player {
             
             // remove one life from player, reset position
             this.lives -= 1;
+
+            if (this.lives > 0) {
+                console.log("audio")
+                this.sounds[2].play();
+                setTimeout(() => {
+                    this.sounds[2].pause();
+                    this.sounds[2].currentTime = 0; // reset to the beginning
+                }, 1500); // stop after 0.5 seconds (clip is too long, sound is short)
+            }
+            
+
             this.element.style.display = "none";
             this.top = this.startTop;
             this.left = this.startLeft;
@@ -191,6 +205,7 @@ class Player {
                 if (flashCount >= 6) {
                     this.element.style.display = "block";
                     this.died = false;
+                    this.sounds[2].currentTime = 0;
                     clearInterval(flashInterval);
                 }
             }, 300);
