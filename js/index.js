@@ -14,6 +14,7 @@ window.addEventListener("load", () => {
     // preload player sounds
     playerSounds.forEach(sound => {
         sound.preload = "auto";
+        sound.volume = 0.5;
         sound.currentTime = 0;
     });
 
@@ -22,7 +23,11 @@ window.addEventListener("load", () => {
     const deathSound = new Audio("audio/death-sound.mp3");
 
     const gameSounds = [victorySound, passedLevelSound, deathSound];
+
+    // slightly lower volume, no preload
     gameSounds.forEach(sound => {
+        sound.preload = "none";
+        sound.volume = 0.5;
         sound.currentTime = 0;
     });
 

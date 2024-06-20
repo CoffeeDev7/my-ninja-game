@@ -15,6 +15,9 @@ class Game {
         this.playerSounds = playerSounds;
         this.gameSounds = gameSounds;
 
+        // adjust audio
+        this.gameSounds[2].volume = 0.3;
+
         // current level
         this.level = 0;
         this.gameOver = false;
@@ -113,7 +116,7 @@ class Game {
             if (frames % 250 === 0 && !this.player.died) {
 
                 // only throw if owner didn't die
-                if (!this.enemies[3].died) {
+                if (!this.enemies[3].died && this.player.left > this.player.startLeft) {
                     this.enemies[3].weapon.throw(this.player);
                 }
             }
@@ -566,19 +569,25 @@ class Game {
 
     // show on death
     showDeathView() {
+        this.gameSounds[2].play();
         this.gameView.style.display = "none";
         this.deathView.style.display = "block";
         setTimeout(() => {
+            this.gameSounds[2].pause();
+            this.gameSounds[2].currentTime = 0;
             this.deathView.style.display = "none";
             this.endView.style.display = "flex";
-        }, 3000)
+        }, 4000)
     }
 
     // show view for winning game
     showVictoryView() {
+        this.gameSounds[0].play();
         this.gameView.style.display = "none";
         this.victoryView.style.display = "flex"
         setTimeout(() => {
+            this.gameSounds[0].pause();
+            this.gameSounds[0].currentTime = 0;
             this.victoryView.style.display = "none";
             this.endView.style.display = "flex";
         }, 5000)
@@ -586,6 +595,7 @@ class Game {
 
     // introduction in between levels
     levelTransition(imageSrc, level) {
+        this.gameSounds[1].play();
         this.gameView.style.display = "none";
         const transitionImg = document.getElementById("transition-img");
         transitionImg.src = imageSrc;

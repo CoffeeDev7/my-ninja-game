@@ -5,6 +5,8 @@ class Player {
         this.platforms = platforms;
 
         this.sounds = sounds
+        this.sounds[1].volume = 0.4;
+        this.sounds[2].volume = 0.2;
 
         this.width = 28;
         this.height = 64;
