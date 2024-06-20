@@ -591,8 +591,8 @@ class Game {
         this.enemyBoss = new EnemyBoss(this.gameView, "images/enemy-boss.png", this.platforms[this.platforms.length - 1]);
 
         this.enemies.push(
-            new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 120),
-            new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 700),
+            new MagicalWeapon("images/special-wpn.png", this.gameView, 140, 120),
+            new MagicalWeapon("images/special-wpn.png", this.gameView, 140, 700),
         );
 
         // start boss movement
@@ -688,6 +688,9 @@ class Game {
             if (enemy.weapon) {
                 enemy.weapon.element.remove();
             }
+            if (enemy.image) {
+                enemy.image.remove();
+            }
             enemy.element.remove();
             enemy = null
         });
@@ -750,13 +753,13 @@ class Game {
             transitionText.innerHTML = `
             <strong>WATCH OUT!</strong> The local martial arts champions have teamed up with 
             the enemy ninjas, and are trying to stop you from reaching the princess.
-            Who could have caused this betrayal ? Keep your eyes open!
+            Who could have caused this betrayal?<br> Keep your eyes open!
             `;
         }
         else if (level === 2) {
             transitionText.innerHTML = `
             <strong>CAREFUL!</strong> Someone is using dark magic to summon demons and curse the platforms.
-            This is getting dangerous! There must be some powerful force behind this conspiracy...
+            This is getting dangerous!<br>There must be some powerful force behind this conspiracy...
             `;
         }
         else if (level === 3) {

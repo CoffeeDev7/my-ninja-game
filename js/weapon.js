@@ -1,9 +1,13 @@
 class Weapon {
-    constructor(imageSrc, owner, gameView) {
+    constructor(imageSrc, owner = null, gameView) {
         if (owner) {
             this.owner = owner;
             this.top = this.owner.top + 25;
             this.left = this.owner.left;
+        }
+        else {
+            this.top = 0;
+            this.left = 0;
         }
         this.thrown = false;
         this.speed = 6;
@@ -208,9 +212,10 @@ class EnemyWeapon extends Weapon {
 
 
 // weapon without owner
+// uses render() function from enemyWeapon class
 class MagicalWeapon extends EnemyWeapon {
-    constructor(imageSrc, _, gameView, top, left) {
-        super(imageSrc, _, gameView)
+    constructor(imageSrc, gameView, top, left) {
+        super(imageSrc, undefined, gameView)
         this.startTop = top;
         this.startLeft = left
         this.top = this.startTop
@@ -220,7 +225,7 @@ class MagicalWeapon extends EnemyWeapon {
         this.width = 64;
         this.height = 64;
 
-
+        /*
         this.element = document.createElement("div");
         this.element.classList.add("weapon-element");
         this.image = document.createElement("img");
@@ -230,6 +235,7 @@ class MagicalWeapon extends EnemyWeapon {
 
         this.element.appendChild(this.image);
         this.gameView.appendChild(this.element);
+        */
 
         this.element.style.width = `${this.width}px`;
         this.element.style.height = `${this.height}px`;
@@ -243,7 +249,7 @@ class MagicalWeapon extends EnemyWeapon {
     throw(player) {
         if (!this.thrown) {
 
-            this.element.style.display = "block";
+            //this.element.style.display = "block";
             this.thrown = true;
 
             const playerPosition = {
