@@ -311,6 +311,7 @@ class FlyingEnemy extends BasicEnemy {
         this.positionY = 0;
         this.startTop = this.top;
         this.startLeft = this.left;
+        this.timeoutId = null;
     }
 
     fly(player) {
@@ -354,7 +355,7 @@ class FlyingEnemy extends BasicEnemy {
         this.element.src = this.imageSrc;
         this.element.classList.add("enemy");
 
-        setTimeout(() => {
+        this.timeoutId = setTimeout(() => {
             this.gameView.appendChild(this.element);
         }, 2000);
     }
@@ -377,6 +378,7 @@ class FlyingEnemy extends BasicEnemy {
                 enemyRect.top < gameViewRect.top
             ) {
                 this.element.remove();
+                this.died = true;
                 this.return();
             }
         }

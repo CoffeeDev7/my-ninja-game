@@ -213,27 +213,6 @@ class Game {
 
         // create platforms
         // moving platforms need 'isVertical' and borders between which it moves
-        /*
-        const platform1 = new Platform(this.gameView, 150, 470, 15);
-        const platform2 = new MovingPlatform(this.gameView, 100, 420, 185, 
-            true, {"start": 470,"end": 300});
-
-        const platform3 = new Platform(this.gameView, 150, 270, 15);
-        const platform4 = new MovingPlatform(this.gameView, 100, 220, 285, 
-            false, {"start": 219,"end": 305});
-
-        const platform5 = new Platform(this.gameView, 200, 130, 495);
-        const platform6 = new MovingPlatform(this.gameView, 50, 170, 420, 
-            true, {"start": 270, "end": 150});
-        
-        const platform7 = new Platform(this.gameView, 125, 410, 700);
-        const platformEnd = new EndPlatform(this.gameView);
-
-        // move platforms
-        platform2.positionY = -1;
-        platform4.positionX = 1;
-        platform6.positionY = 1;
-        */
         // add to array
         this.platforms.push(
             new Platform(this.gameView, 150, 470, 15),
@@ -253,27 +232,7 @@ class Game {
         this.platforms[3].positionX = 1;
         this.platforms[5].positionY = 1;
 
-        /*
         // create enemies
-        const basicEnemy1 = new BasicEnemy(this.gameView, 
-            "images/basic-enemy-judo.png", platform3
-        );
-
-        const specialEnemy1 = new MiniBoss(this.gameView, 
-            "images/enemy-sumo.png", platform5
-        );
-
-        let flyingEnemy1 = new FlyingEnemy(this.gameView,
-            "images/flying-enemy-judo.png", platform7
-        );
-
-        // move enemies
-        basicEnemy1.positionX = -1;
-        specialEnemy1.positionX = 1;
-        flyingEnemy1.positionX = -1;
-        */
-
-        // add to array
         this.enemies.push(
             new BasicEnemy(this.gameView, "images/basic-enemy-judo.png", this.platforms[2]),
             new MiniBoss(this.gameView, "images/enemy-sumo.png", this.platforms[4]),
@@ -289,6 +248,8 @@ class Game {
         this.displayPlayerLives();
 
         let frames = 0;
+        let enemyReturnTimout = false;
+        let timeOutId;
 
         // game loop
         const intervalId = setInterval(() => {
@@ -333,6 +294,7 @@ class Game {
                     }
                 }
             });
+            
 
             if (this.enemies[1].lives === 0) {
                 this.enemies[1].died = true;
@@ -343,6 +305,11 @@ class Game {
             // check for game over / passed level
             if (this.player.lives === 0 || this.platforms[this.platforms.length - 1].passedLevel(this.player.element)) {
                 clearInterval(intervalId);
+
+                // clear timeout for respawning enemy
+                if (this.enemies[2].timeoutId !== null) {
+                    clearTimeout(this.enemies[2].timeoutId);
+                }
 
                 if (this.player.lives === 0) {
                     this.gameOver = true;
@@ -367,45 +334,6 @@ class Game {
     levelThree() {
 
         // create platforms
-        /*
-        const platform1 = new Platform(this.gameView, 150, 470, 15);
-        const platform2 = new MovingPlatform(this.gameView, 210, 410, 200,
-            false, {"start": 200, "end": 400}
-        );
-        const platform3 = new Platform(this.gameView, 75, 350, 620);
-        const platform4 = new MovingPlatform(this.gameView, 150, 220, 20, 
-            true, {"start": 270, "end": 120}
-        );
-        const platformEnd = new EndPlatform(this.gameView);
-
-        // move platforms
-        platform2.positionX = -1;
-        platform4.positionY = -1;
-
-
-        platform2.speed = 2;
-        platform4.speed = 2;
-
-        // change Y of moving platform
-        const position1 = 410
-        const position2 = 290
-        const position3 = 100
-
-        // change position of platform at at regular interval
-        const platformInterval = setInterval(() => {
-            if (platform2.top === position1) {
-                platform2.top = position2;
-            }
-            else if (platform2.top === position2) {
-                platform2.top = position3;
-            }
-            else {
-                platform2.top = position1;
-            }
-        }, 5500);
-        */
-
-        // add to array
         this.platforms.push(
             new Platform(this.gameView, 150, 470, 15),
             new MovingPlatform(this.gameView, 210, 410, 200, false, {"start": 200, "end": 400}),
@@ -450,35 +378,6 @@ class Game {
 
         
         // create enemies
-        /*
-        const floatingEnemy1 = new FloatingEnemy(this.gameView,
-            "images/demon-1.png", 75, 500,
-            {"start": 220, "end": 600},
-            {"start": 105, "end": 25}
-        );
-
-        const floatingEnemy2 = new FloatingEnemy(this.gameView,
-            "images/demon-2.png", 250, 100, 
-            {"start": 70, "end": 200},
-            {"start": 270, "end": 100}
-        );
-
-        const floatingEnemy3 = new FloatingEnemy(this.gameView,
-            "images/demon-3.png", 200, 700,
-            {"start": 650, "end": 800},
-            {"start": 255, "end": 130}
-        );
-        // move enemies
-        floatingEnemy1.positionX = -1;
-        floatingEnemy1.positionY = 1;
-
-        floatingEnemy2.positionX = 1;
-        floatingEnemy2.positionY = -1;
-
-        floatingEnemy3.positionX = -1;
-        floatingEnemy3.positionY = 1;
-        */
-        // add to array
         this.enemies.push(
             new FloatingEnemy(this.gameView, "images/demon-1.png", 75, 500,
                 {"start": 220, "end": 600},
@@ -561,15 +460,8 @@ class Game {
         // activate special controls for final level
         this.gameView.classList.add("boss-level");
         this.endLevel = true;
-         /*
-        // create platforms, add to array
-        const platform1 = new Platform(this.gameView, 150, 470, 15);
-        const platform2 = new Platform(this.gameView, 200, 420, 215);
-        const platform3 = new Platform(this.gameView, 150, 470, 465);
-        const platform4 = new Platform(this.gameView, 200, 420, 665);
-        const platformBoss = new Platform(this.gameView, 700, 100, 100);
-        */
 
+        // create platforms
         this.platforms.push(
             new Platform(this.gameView, 150, 470, 15),
             new Platform(this.gameView, 200, 420, 215),
@@ -582,12 +474,7 @@ class Game {
         this.player = new Player(this.gameView, this.platforms);
         this.displayPlayerLives();
 
-        /*
-        //create boss and weapons, add to enemies array
-        const magicWeapon1 = new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 120);
-        const magicWeapon2 = new MagicalWeapon("images/special-wpn.png", null, this.gameView, 140, 700);
-        */
-
+        // create boss and enemies
         this.enemyBoss = new EnemyBoss(this.gameView, "images/enemy-boss.png", this.platforms[this.platforms.length - 1]);
 
         this.enemies.push(
@@ -598,14 +485,13 @@ class Game {
         // start boss movement
         this.enemyBoss.positionX = 1;
         
-
+        // game loop
         let frames = 0;
         const intervalId = setInterval(() => {
 
             frames += 1;
 
             // action for weapons, throw at regular intervals
-            //(!) ensure they don't get thrown at the same time
             if (frames % 250 === 0 && !this.player.died) {
                 this.enemies[0].throw(this.player);
             }
