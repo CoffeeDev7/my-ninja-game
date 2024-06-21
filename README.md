@@ -187,6 +187,6 @@ In the Untitled Ninja Game you go on an adventure to save the princess. The goal
 
 ## Links
 
-- [Slides Link](http://slides.com) // to do
+- [Slides Link](https://docs.google.com/presentation/d/1D9Gh3WReM3sspOIqMQqw5s-8Ru9C6INQ2KDUqmRl7QI/edit?usp=sharing)
 - [Github repository Link](https://github.com/tdot123-1/untitled-ninja-game)
 - [Deployment Link](https://github.com/tdot123-1/untitled-ninja-game/deployments)
