@@ -49,6 +49,8 @@ class Game {
         this.livesElements = [];
     }
 
+    // Helper function for fade-out effect
+    
     start() {
         // starting conditions for new game
         this.gameSounds[4].currentTime = 0;
@@ -137,10 +139,21 @@ class Game {
                     this.player.died = true;
                     this.player.respawn();
                 }
+                // Updated fade-out function
                 else if (enemy.gotHit(this.player.weapon)) {
                     enemy.died = true;
-                    enemy.element.remove();
+                    fadeOutAndRemove(enemy.element); // Call the fade-out function instead of removing instantly
                 }
+                function fadeOutAndRemove(element) {
+                    element.style.transition = "opacity 0.5s"; // Set a transition for opacity
+                    element.style.opacity = "0"; // Start fading out
+            
+                    // After the transition is complete, remove the element
+                    element.addEventListener("transitionend", () => {
+                        element.remove();
+                    });
+                }
+            
             });
 
             
